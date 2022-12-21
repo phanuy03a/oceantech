@@ -1,16 +1,13 @@
-import { ThemeProvider, useMediaQuery } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import { Box, styled, useTheme } from "@mui/system";
 import { MatxSuspense } from "app/components";
-import useSettings from "app/hooks/useSettings";
-import { sidenavCompactWidth, sideNavWidth } from "app/utils/constant";
-import React, { useEffect, useRef } from "react";
-import Scrollbar from "react-perfect-scrollbar";
+import React from "react";
 import { Outlet } from "react-router-dom";
 import Footer from "../../Footer.jsx";
 import SidenavTheme from "../../MatxTheme/SidenavTheme/SidenavTheme";
-import SecondarySidebar from "../../SecondarySidebar/SecondarySidebar";
 import Layout1Sidenav from "./Layout1Sidenav";
 import Layout1Topbar from "./Layout1Topbar";
+import { themes } from "app/components/MatxTheme/initThemes.js";
 const Layout1Root = styled(Box)(({ theme }) => ({
   display: "flex",
   background: theme.palette.background.default,
@@ -23,16 +20,7 @@ const ContentBox = styled(Box)(() => ({
   flexDirection: "column",
   justifyContent: "space-between",
 }));
-
-const StyledScrollBar = styled(Scrollbar)(() => ({
-  height: "100%",
-  position: "relative",
-  display: "flex",
-  flexGrow: "1",
-  flexDirection: "column",
-}));
-
-const LayoutContainer = styled(Box)(({ width, secondarySidebar }) => ({
+const LayoutContainer = styled(Box)(({ width }) => ({
   height: "100vh",
   display: "flex",
   flexGrow: "1",
@@ -42,35 +30,26 @@ const LayoutContainer = styled(Box)(({ width, secondarySidebar }) => ({
   position: "relative",
   overflow: "hidden",
   transition: "all 0.3s ease",
-  marginRight: secondarySidebar.open ? 50 : 0,
 }));
-
+const topbarTheme = themes["whiteBlue"];
 const Layout1 = () => {
-  const { settings, updateSettings } = useSettings();
-  const { layout1Settings, secondarySidebar } = settings;
-  const topbarTheme = settings.themes[layout1Settings.topbar.theme];
-
   const theme = useTheme();
   const layoutClasses = `theme-${theme.palette.type}`;
-
   return (
     <Layout1Root className={layoutClasses}>
       <SidenavTheme>
         <Layout1Sidenav />
       </SidenavTheme>
-
-      <LayoutContainer width={260} secondarySidebar={secondarySidebar}>
+      <LayoutContainer width={260}>
         <ThemeProvider theme={topbarTheme}>
           <Layout1Topbar fixed={true} className="elevation-z8" />
         </ThemeProvider>
-
         <ContentBox>
           <Box flexGrow={1} position="relative">
             <MatxSuspense>
               <Outlet />
             </MatxSuspense>
           </Box>
-
           <Footer />
         </ContentBox>
       </LayoutContainer>

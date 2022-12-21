@@ -1,10 +1,8 @@
-import MatxSuspense from "../MatxSuspense.jsx";
-import useSettings from "../../hooks/useSettings.js";
+import MatxSuspense from "../MatxSuspense";
 import { MatxLayouts } from "./index";
 
 const MatxLayout = (props) => {
-  const { settings } = useSettings();
-  const Layout = MatxLayouts[settings.activeLayout];
+  const Layout = MatxLayouts["layout1"];
 
   return (
     <MatxSuspense>

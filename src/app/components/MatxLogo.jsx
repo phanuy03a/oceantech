@@ -1,8 +1,6 @@
-import useSettings from "app/hooks/useSettings";
-
+import { themes } from "./MatxTheme/initThemes";
 const MatxLogo = ({ className }) => {
-  const { settings } = useSettings();
-  const theme = settings.themes[settings.activeTheme];
+  const theme = themes["blue"];
 
   return (
     <svg

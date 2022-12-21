@@ -1,34 +1,28 @@
-import { Menu, ThemeProvider } from '@mui/material';
-import { Box, styled } from '@mui/system';
-import useSettings from 'app/hooks/useSettings';
-import React, { Fragment } from 'react';
-
+import { Menu, ThemeProvider } from "@mui/material";
+import { Box, styled } from "@mui/system";
+import React, { Fragment } from "react";
+import { themes } from "./MatxTheme/initThemes";
 const MenuButton = styled(Box)(({ theme }) => ({
-  display: 'inline-block',
+  display: "inline-block",
   color: theme.palette.text.primary,
-  '& div:hover': {
+  "& div:hover": {
     backgroundColor: theme.palette.action.hover,
   },
 }));
-
 const MatxMenu = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const children = React.Children.toArray(props.children);
-  let { shouldCloseOnItemClick = true, horizontalPosition = 'left' } = props;
-  const { settings } = useSettings();
-
+  let { shouldCloseOnItemClick = true, horizontalPosition = "left" } = props;
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   return (
     <Fragment>
       <MenuButton onClick={handleClick}>{props.menuButton}</MenuButton>
-      <ThemeProvider theme={settings.themes[settings.activeTheme]}>
+      <ThemeProvider theme={themes["blue"]}>
         <Menu
           elevation={8}
           getContentAnchorEl={null}
@@ -36,11 +30,11 @@ const MatxMenu = (props) => {
           open={!!anchorEl}
           onClose={handleClose}
           anchorOrigin={{
-            vertical: 'bottom',
+            vertical: "bottom",
             horizontal: horizontalPosition,
           }}
           transformOrigin={{
-            vertical: 'top',
+            vertical: "top",
             horizontal: horizontalPosition,
           }}
         >

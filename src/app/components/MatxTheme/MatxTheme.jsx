@@ -1,9 +1,7 @@
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import useSettings from "app/hooks/useSettings";
-
+import { themes } from "./initThemes";
 const MatxTheme = ({ children }) => {
-  const { settings } = useSettings();
-  let activeTheme = { ...settings.themes[settings.activeTheme] };
+  let activeTheme = { ...themes["blue"] };
 
   return (
     <ThemeProvider theme={activeTheme}>

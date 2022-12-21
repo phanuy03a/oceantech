@@ -1,9 +1,7 @@
 import { AppBar, Button, ThemeProvider, Toolbar } from "@mui/material";
 import { styled, useTheme } from "@mui/system";
-import useSettings from "app/hooks/useSettings";
 import { topBarHeight } from "app/utils/constant";
-import { Paragraph, Span } from "./Typography";
-
+import { themes } from "./MatxTheme/initThemes";
 const AppFooter = styled(Toolbar)(() => ({
   display: "flex",
   alignItems: "center",
@@ -20,20 +18,9 @@ const AppFooter = styled(Toolbar)(() => ({
   },
 }));
 
-const FooterContent = styled("div")(() => ({
-  width: "100%",
-  display: "flex",
-  alignItems: "center",
-  padding: "0px 1rem",
-  maxWidth: "1170px",
-  margin: "0 auto",
-}));
-
 const Footer = () => {
   const theme = useTheme();
-  const { settings } = useSettings();
-
-  const footerTheme = settings.themes[settings.footer.theme] || theme;
+  const footerTheme = themes["slateDark1"];
 
   return (
     <ThemeProvider theme={footerTheme}>

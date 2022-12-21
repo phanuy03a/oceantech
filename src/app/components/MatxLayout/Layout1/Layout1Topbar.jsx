@@ -2,15 +2,10 @@ import { Avatar, Hidden, Icon, IconButton, MenuItem, useMediaQuery } from "@mui/
 import { Box, styled, useTheme } from "@mui/system";
 import { MatxMenu, MatxSearchBox } from "app/components";
 import { themeShadows } from "app/components/MatxTheme/themeColors";
-import { NotificationProvider } from "app/contexts/NotificationContext";
-import useAuth from "app/hooks/useAuth";
-import useSettings from "app/hooks/useSettings";
 import { topBarHeight } from "app/utils/constant";
 import React from "react";
 import { Link } from "react-router-dom";
 import { Span } from "../../../components/Typography";
-import NotificationBar from "../../NotificationBar/NotificationBar";
-import ShoppingCart from "../../ShoppingCart";
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.text.primary,
@@ -71,28 +66,6 @@ const IconBox = styled("div")(({ theme }) => ({
 }));
 
 const Layout1Topbar = () => {
-  const theme = useTheme();
-  const { settings, updateSettings } = useSettings();
-  const { logout, user } = useAuth();
-  const isMdScreen = useMediaQuery(theme.breakpoints.down("md"));
-
-  const updateSidebarMode = (sidebarSettings) => {
-    updateSettings({
-      layout1Settings: { leftSidebar: { ...sidebarSettings } },
-    });
-  };
-
-  const handleSidebarToggle = () => {
-    let { layout1Settings } = settings;
-    let mode;
-    if (isMdScreen) {
-      mode = layout1Settings.leftSidebar.mode === "close" ? "mobile" : "close";
-    } else {
-      mode = layout1Settings.leftSidebar.mode === "full" ? "close" : "full";
-    }
-    updateSidebarMode({ mode });
-  };
-
   return (
     <TopbarRoot>
       <TopbarContainer>
@@ -118,13 +91,6 @@ const Layout1Topbar = () => {
 
         <Box display="flex" alignItems="center">
           <MatxSearchBox />
-
-          {/* <NotificationProvider>
-            <NotificationBar />
-          </NotificationProvider> */}
-
-          {/* <ShoppingCart /> */}
-
           <MatxMenu
             menuButton={
               <UserMenu>
@@ -150,13 +116,11 @@ const Layout1Topbar = () => {
                 <Span> Profile </Span>
               </Link>
             </StyledItem>
-
             <StyledItem>
               <Icon> settings </Icon>
               <Span> Settings </Span>
             </StyledItem>
-
-            <StyledItem onClick={logout}>
+            <StyledItem>
               <Icon> power_settings_new </Icon>
               <Span> Logout </Span>
             </StyledItem>
