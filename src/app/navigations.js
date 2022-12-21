@@ -6,25 +6,24 @@ export const navigations = [
     icon: "security",
     children: [],
   },
-  { label: "Lãnh đạo", type: "label" },
+
   {
-    name: "Phê duyệt",
+    name: "Lãnh đạo",
     icon: "collections_bookmark",
     children: [
       { name: "Chờ duyệt", path: "/test1", icon: "cached" },
       { name: "Đã duyệt", path: "/test2", icon: "published_with_changes" },
     ],
   },
-  { label: "Quản Lý", type: "label" },
 
   {
-    name: "Nhân viên",
+    name: "Quản lý",
     icon: "group",
     children: [
-      { name: "Thêm mới nhân viên", path: "/test3", icon: "person_add_alt_1" },
-      { name: "Quản lý nhân viên", path: "/test4", icon: "manage_accounts" },
-      { name: "Kết thúc", path: "/test5", icon: "person_off" },
-      { name: "Nội dung liên quan", path: "/test6", icon: "sensor_occupied" },
+      { name: "Thêm mới nhân viên", path: "/addnew_employee", icon: "person_add_alt_1" },
+      { name: "Quản lý nhân viên", path: "/manage_employee", icon: "manage_accounts" },
+      { name: "Kết thúc", path: "/nolongerworking", icon: "person_off" },
+      { name: "Nội dung liên quan", path: "/related_info", icon: "sensor_occupied" },
     ],
   },
 ];

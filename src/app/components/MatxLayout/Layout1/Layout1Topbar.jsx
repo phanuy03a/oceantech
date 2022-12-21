@@ -97,7 +97,7 @@ const Layout1Topbar = () => {
     <TopbarRoot>
       <TopbarContainer>
         <Box display="flex">
-          <StyledIconButton onClick={handleSidebarToggle}>
+          <StyledIconButton>
             <Icon>menu</Icon>
           </StyledIconButton>
 
@@ -119,19 +119,21 @@ const Layout1Topbar = () => {
         <Box display="flex" alignItems="center">
           <MatxSearchBox />
 
-          <NotificationProvider>
+          {/* <NotificationProvider>
             <NotificationBar />
-          </NotificationProvider>
+          </NotificationProvider> */}
 
-          <ShoppingCart />
+          {/* <ShoppingCart /> */}
 
           <MatxMenu
             menuButton={
               <UserMenu>
                 <Hidden xsDown>
-                  <Span>{/* Hi <strong>{user.name}</strong> */}</Span>
+                  <Span>
+                    Hi <strong>{"Uy"}</strong>
+                  </Span>
                 </Hidden>
-                {/* <Avatar src={user.avatar} sx={{ cursor: "pointer" }} /> */}
+                <Avatar src="/assets/images/illustrations/dreamer.svg" sx={{ cursor: "pointer" }} />
               </UserMenu>
             }
           >
