@@ -7,19 +7,23 @@ const BrandRoot = styled(Box)(() => ({
   justifyContent: "space-between",
   padding: "20px 18px 20px 29px",
 }));
-const StyledSpan = styled(Span)(({ mode }) => ({
+const StyledSpan = styled(Span)(({ display }) => ({
   fontSize: 18,
   marginLeft: ".5rem",
-  display: mode === "compact" ? "none" : "block",
+  display: display,
 }));
-const Brand = ({ children }) => {
+const Brand = ({ children, display }) => {
   return (
     <BrandRoot>
       <Box display="flex" alignItems="center">
         <MatxLogo />
-        <StyledSpan className="sidenavHoverShow">Oceantech</StyledSpan>
+        <StyledSpan display={display} className="sidenavHoverShow">
+          Oceantech
+        </StyledSpan>
       </Box>
-      <Box className="sidenavHoverShow">{children}</Box>
+      <Box className="sidenavHoverShow" sx={{ display: display }}>
+        {children}
+      </Box>
     </BrandRoot>
   );
 };

@@ -3,6 +3,7 @@ import { MatxLayouts } from "./index";
 
 const MatxLayout = (props) => {
   const Layout = MatxLayouts["layout1"];
+  console.log(MatxLayouts);
 
   return (
     <MatxSuspense>

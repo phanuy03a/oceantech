@@ -6,7 +6,6 @@ import { MatxLayout } from "./components";
 import routes from "./RootRoutes";
 import SignIn from "./views/SignIn/SignIn";
 
-MatxLayout;
 const App = () => {
   const content = useRoutes(routes);
   return (

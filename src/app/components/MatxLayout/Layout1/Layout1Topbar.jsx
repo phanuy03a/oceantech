@@ -65,28 +65,17 @@ const IconBox = styled("div")(({ theme }) => ({
   [theme.breakpoints.down("md")]: { display: "none !important" },
 }));
 
-const Layout1Topbar = () => {
+const Layout1Topbar = (props) => {
+  const { handleChangeNav } = props;
   return (
     <TopbarRoot>
       <TopbarContainer>
         <Box display="flex">
-          <StyledIconButton>
+          <StyledIconButton onClick={handleChangeNav}>
             <Icon>menu</Icon>
           </StyledIconButton>
 
-          <IconBox>
-            <StyledIconButton>
-              <Icon>mail_outline</Icon>
-            </StyledIconButton>
-
-            <StyledIconButton>
-              <Icon>web_asset</Icon>
-            </StyledIconButton>
-
-            <StyledIconButton>
-              <Icon>star_outline</Icon>
-            </StyledIconButton>
-          </IconBox>
+          <IconBox></IconBox>
         </Box>
 
         <Box display="flex" alignItems="center">

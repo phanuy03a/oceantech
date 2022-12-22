@@ -3,15 +3,8 @@ import React, { Fragment } from "react";
 import { NavLink } from "react-router-dom";
 import { Paragraph, Span } from "../Typography";
 import MatxVerticalNavExpansionPanel from "./MatxVerticalNavExpansionPanel";
-const ListLabel = styled(Paragraph)(({ theme }) => ({
-  fontSize: "12px",
-  marginTop: "20px",
-  marginLeft: "15px",
-  marginBottom: "10px",
-  textTransform: "uppercase",
-
-  color: theme.palette.text.secondary,
-}));
+import { useContext } from "react";
+import { ModeContext } from "../MatxLayout/Layout1/Layout1";
 const ExtAndIntCommon = {
   display: "flex",
   overflow: "hidden",
@@ -34,10 +27,6 @@ const ExtAndIntCommon = {
     verticalAlign: "middle",
   },
 };
-const ExternalLink = styled("a")(({ theme }) => ({
-  ...ExtAndIntCommon,
-  color: theme.palette.text.primary,
-}));
 
 const InternalLink = styled(Box)(({ theme }) => ({
   "& a": {
@@ -49,9 +38,10 @@ const InternalLink = styled(Box)(({ theme }) => ({
   },
 }));
 
-const StyledText = styled(Span)(() => ({
+const StyledText = styled(Span)(({ display }) => ({
   fontSize: "0.875rem",
   paddingLeft: "0.8rem",
+  display: display,
 }));
 
 const BulletIcon = styled("div")(({ theme }) => ({
@@ -63,50 +53,15 @@ const BulletIcon = styled("div")(({ theme }) => ({
   background: theme.palette.text.primary,
 }));
 
-const BadgeValue = styled("div")(() => ({
-  padding: "1px 8px",
-  overflow: "hidden",
-  borderRadius: "300px",
-}));
-
 const MatxVerticalNav = ({ items }) => {
+  const [display] = useContext(ModeContext);
   const renderLevels = (data) => {
     return data.map((item, index) => {
-      if (item.type === "label")
-        return (
-          <ListLabel key={index} className="sidenavHoverShow">
-            {item.label}
-          </ListLabel>
-        );
-
       if (item.children) {
         return (
           <MatxVerticalNavExpansionPanel item={item} key={index}>
             {renderLevels(item.children)}
           </MatxVerticalNavExpansionPanel>
-        );
-      } else if (item.type === "extLink") {
-        return (
-          <ExternalLink
-            key={index}
-            href={item.path}
-            className={"compactNavItem"}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <ButtonBase key={item.name} name="child" sx={{ width: "100%" }}>
-              {(() => {
-                if (item.icon) {
-                  return <Icon className="icon">{item.icon}</Icon>;
-                } else {
-                  return <span className="item-icon icon-text">{item.iconText}</span>;
-                }
-              })()}
-              <StyledText className="sidenavHoverShow">{item.name}</StyledText>
-              <Box mx="auto"></Box>
-              {item.badge && <BadgeValue>{item.badge.value}</BadgeValue>}
-            </ButtonBase>
-          </ExternalLink>
         );
       } else {
         return (
@@ -125,20 +80,18 @@ const MatxVerticalNav = ({ items }) => {
                       sx={{
                         ml: "20px",
                         fontSize: "11px",
-                        display: "compact",
+                        display: "none",
                       }}
                     >
                       {item.iconText}
                     </Box>
                   </Fragment>
                 )}
-                <StyledText className="sidenavHoverShow">{item.name}</StyledText>
+                <StyledText display={display} className="sidenavHoverShow">
+                  {item.name}
+                </StyledText>
 
                 <Box mx="auto" />
-
-                {item.badge && (
-                  <BadgeValue className="sidenavHoverShow">{item.badge.value}</BadgeValue>
-                )}
               </ButtonBase>
             </NavLink>
           </InternalLink>

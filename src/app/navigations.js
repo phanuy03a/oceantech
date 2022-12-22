@@ -1,11 +1,5 @@
 export const navigations = [
   { name: "Dashboard", path: "/dashboard/default", icon: "dashboard" },
-  { label: "Trang chủ", type: "label" },
-  {
-    name: "Bảo mật",
-    icon: "security",
-    children: [],
-  },
 
   {
     name: "Lãnh đạo",
