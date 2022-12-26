@@ -1,6 +1,5 @@
 export const navigations = [
-  { name: "Dashboard", path: "/dashboard/default", icon: "dashboard" },
-
+  { label: "Trang chủ", type: "label" },
   {
     name: "Lãnh đạo",
     icon: "collections_bookmark",

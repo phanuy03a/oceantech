@@ -1,43 +1,28 @@
-import { Avatar, Hidden, Icon, IconButton, MenuItem, useMediaQuery } from "@mui/material";
-import { Box, styled, useTheme } from "@mui/system";
-import { MatxMenu, MatxSearchBox } from "app/components";
-import { themeShadows } from "app/components/MatxTheme/themeColors";
-import { topBarHeight } from "app/utils/constant";
 import React from "react";
+import { Box, styled } from "@mui/system";
+import { Span } from "../Typography";
 import { Link } from "react-router-dom";
-import { Span } from "../../../components/Typography";
-
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-  color: theme.palette.text.primary,
-}));
-
-const TopbarRoot = styled("div")(({ theme }) => ({
+import { Icon, IconButton, MenuItem, Hidden, Avatar } from "@mui/material";
+import MenuTopBar from "./MenuTopBar";
+const StyledIconButton = styled(IconButton)(() => ({}));
+const TopbarRoot = styled("div")(() => ({
   top: 0,
   zIndex: 96,
+  boxShadow:
+    "0px 5px 5px -3px rgba(0, 0, 0, 0.06),0px 8px 10px 1px rgba(0, 0, 0, 0.042),0px 3px 14px 2px rgba(0, 0, 0, 0.036)",
   transition: "all 0.3s ease",
-  boxShadow: themeShadows[8],
-  height: topBarHeight,
+  height: 64,
 }));
-
-const TopbarContainer = styled(Box)(({ theme }) => ({
+const TopbarContainer = styled(Box)(() => ({
   padding: "8px",
   paddingLeft: 18,
   paddingRight: 20,
+  boxSizing: "border-box",
   height: "100%",
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
-  background: theme.palette.primary.main,
-  [theme.breakpoints.down("sm")]: {
-    paddingLeft: 16,
-    paddingRight: 16,
-  },
-  [theme.breakpoints.down("xs")]: {
-    paddingLeft: 14,
-    paddingRight: 16,
-  },
 }));
-
 const UserMenu = styled(Box)(() => ({
   display: "flex",
   alignItems: "center",
@@ -47,7 +32,7 @@ const UserMenu = styled(Box)(() => ({
   "& span": { margin: "0 8px" },
 }));
 
-const StyledItem = styled(MenuItem)(({ theme }) => ({
+const StyledItem = styled(MenuItem)(() => ({
   display: "flex",
   alignItems: "center",
   minWidth: 185,
@@ -57,30 +42,21 @@ const StyledItem = styled(MenuItem)(({ theme }) => ({
     alignItems: "center",
     textDecoration: "none",
   },
-  "& span": { marginRight: "10px", color: theme.palette.text.primary },
+  "& span": { marginRight: "10px", color: "rgba(52, 49, 76, 1)" },
 }));
 
-const IconBox = styled("div")(({ theme }) => ({
-  display: "inherit",
-  [theme.breakpoints.down("md")]: { display: "none !important" },
-}));
-
-const Layout1Topbar = (props) => {
-  const { handleChangeNav } = props;
+function LayoutTopbar(props) {
   return (
     <TopbarRoot>
       <TopbarContainer>
         <Box display="flex">
-          <StyledIconButton onClick={handleChangeNav}>
+          <StyledIconButton>
             <Icon>menu</Icon>
           </StyledIconButton>
-
-          <IconBox></IconBox>
         </Box>
 
         <Box display="flex" alignItems="center">
-          <MatxSearchBox />
-          <MatxMenu
+          <MenuTopBar
             menuButton={
               <UserMenu>
                 <Hidden xsDown>
@@ -113,11 +89,11 @@ const Layout1Topbar = (props) => {
               <Icon> power_settings_new </Icon>
               <Span> Logout </Span>
             </StyledItem>
-          </MatxMenu>
+          </MenuTopBar>
         </Box>
       </TopbarContainer>
     </TopbarRoot>
   );
-};
+}
 
-export default React.memo(Layout1Topbar);
+export default LayoutTopbar;

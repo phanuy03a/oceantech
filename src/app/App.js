@@ -1,17 +1,14 @@
 import React from "react";
-import MatxTheme from "./components/MatxTheme/MatxTheme";
-import Layout1 from "./components/MatxLayout/Layout1/Layout1";
+import Layout from "./components/Layout/Layout";
 import { useRoutes } from "react-router-dom";
-import { MatxLayout } from "./components";
-import routes from "./RootRoutes";
-import SignIn from "./views/SignIn/SignIn";
-
+import routes from "./Routes";
 const App = () => {
   const content = useRoutes(routes);
   return (
     <>
-      <MatxTheme>{content}</MatxTheme>
+      <>{content}</>
     </>
   );
 };
+
 export default App;

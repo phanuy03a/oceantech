@@ -13,7 +13,6 @@ module.exports = {
   plugins: [
     new HTMLWebpackPlugin({
       template: "./src/index.html",
-      favicon: "./src/asserts/images/logo.ico",
     }),
     new MiniCssExtractPlugin(),
   ],
@@ -64,7 +63,7 @@ module.exports = {
 
   devServer: {
     hot: true,
-    port: 3000,
+    port: 2001,
     open: true,
     historyApiFallback: true,
     historyApiFallback: {
