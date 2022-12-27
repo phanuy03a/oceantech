@@ -1,20 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import AddNewEmployeeDialog from "./AddNewEmployeeDialog";
 import Breadcrumb from "app/components/Breadcrumb";
-import {
-  Button,
-  Box,
-  Icon,
-  IconButton,
-  styled,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-} from "@mui/material";
-import { useState } from "react";
+import { Button, Box, Icon, IconButton, styled, Tooltip } from "@mui/material";
+import MaterialTable from "@material-table/core";
 const Container = styled("div")(({ theme }) => ({
   margin: "30px",
   [theme.breakpoints.down("sm")]: { margin: "16px" },
@@ -23,37 +11,75 @@ const Container = styled("div")(({ theme }) => ({
     [theme.breakpoints.down("sm")]: { marginBottom: "16px" },
   },
 }));
-const StyledTable = styled(Table)(() => ({
-  whiteSpace: "pre",
-  "& thead": {
-    "& tr": { "& th": { paddingLeft: 0, paddingRight: 0, fontWeight: "600" } },
-  },
-  "& tbody": {
-    "& tr": { "& td": { paddingLeft: 0, textTransform: "capitalize" } },
-  },
-}));
-const subscribarList = [
-  {
-    name: "john doe",
-    date: "18 january, 2019",
-    amount: 1000,
-    status: "close",
-    company: "ABC Fintech LTD.",
-  },
-];
 
 function AddNewEmployee() {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [shouldOpenDialog, setShouldOpenDialog] = useState(false);
 
-  const handleChangePage = (_, newPage) => {
-    setPage(newPage);
-  };
+  const columns = [
+    {
+      title: "Hành động",
+      render: (rowData) => {
+        const isDisabled = rowData.status?.id !== 1 && rowData.status?.id !== 3;
+        return (
+          <>
+            <Tooltip title="Sửa">
+              <IconButton onClick={() => setShouldOpenDialog(true)}>
+                <Icon color="primary">edit</Icon>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Xóa">
+              <IconButton disabled={isDisabled}>
+                <Icon color={isDisabled ? "disabled" : "error"}>delete</Icon>
+              </IconButton>
+            </Tooltip>
+          </>
+        );
+      },
+    },
+    { title: "Họ tên", field: "name" },
+    { title: "Tuổi", field: "age" },
+    { title: "Email", field: "email" },
+    { title: "Số điện thoại", field: "phone" },
+    { title: "Trạng thái", field: "status.title" },
+  ];
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  const data = [
+    {
+      name: "Uy ko tín",
+      age: "11",
+      email: "abcdef@gmail.com",
+      phone: "012456789",
+      status: { id: 1, title: "Đã duyệt" },
+    },
+    {
+      name: "Vũ nhôm",
+      age: "22",
+      email: "abcdef@gmail.com",
+      phone: "012456789",
+      status: { id: 2, title: "Chờ duyệt" },
+    },
+    {
+      name: "Trung tình",
+      age: "33",
+      email: "abcdef@gmail.com",
+      phone: "012456789",
+      status: { id: 2, title: "Chờ duyệt" },
+    },
+    {
+      name: "Huy",
+      age: "44",
+      email: "abcdef@gmail.com",
+      phone: "012456789",
+      status: { id: 3, title: "Chờ nộp hồ sơ" },
+    },
+    {
+      name: "Cuốc Lươn",
+      age: "55",
+      email: "abcdef@gmail.com",
+      phone: "012456789",
+      status: { id: 4, title: "Yêu cầu bổ sung" },
+    },
+  ];
 
   return (
     <Container>
@@ -63,58 +89,43 @@ function AddNewEmployee() {
         />
       </Box>
       <Box>
-        <Button variant="contained" color="primary" sx={{ mb: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ mb: 2 }}
+          onClick={() => setShouldOpenDialog(true)}
+        >
           Thêm mới
         </Button>
       </Box>
 
       <Box width="100%" overflow="auto">
-        <StyledTable className="style-table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Name</TableCell>
-              <TableCell align="center">Company</TableCell>
-              <TableCell align="center">Start Date</TableCell>
-              <TableCell align="center">Status</TableCell>
-              <TableCell align="center">Amount</TableCell>
-              <TableCell align="right">Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {subscribarList
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((subscriber, index) => (
-                <TableRow key={index}>
-                  <TableCell align="left">{subscriber.name}</TableCell>
-                  <TableCell align="center">{subscriber.company}</TableCell>
-                  <TableCell align="center">{subscriber.date}</TableCell>
-                  <TableCell align="center">{subscriber.status}</TableCell>
-                  <TableCell align="center">${subscriber.amount}</TableCell>
-                  <TableCell align="right">
-                    <IconButton>
-                      <Icon color="error">close</Icon>
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </StyledTable>
-
-        <TablePagination
-          sx={{ px: 2 }}
-          page={page}
-          component="div"
-          rowsPerPage={rowsPerPage}
-          count={subscribarList.length}
-          onPageChange={handleChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          nextIconButtonProps={{ "aria-label": "Next Page" }}
-          backIconButtonProps={{ "aria-label": "Previous Page" }}
+        <MaterialTable
+          title={"Danh sách thêm mới"}
+          data={data}
+          columns={columns}
+          options={{
+            rowStyle: (rowData, index) => {
+              return {
+                backgroundColor: index % 2 === 1 ? "#EEE" : "#FFF",
+              };
+            },
+            maxBodyHeight: "1000px",
+            minBodyHeight: "370px",
+            headerStyle: {
+              backgroundColor: "#262e49",
+              color: "#fff",
+            },
+            // padding: 'dense',
+            padding: "default",
+            // search: false,
+            // exportButton: true,
+            toolbar: true,
+          }}
         />
       </Box>
 
-      {/* <AddNewEmployeeDialog></AddNewEmployeeDialog> */}
+      {shouldOpenDialog && <AddNewEmployeeDialog handleClose={() => setShouldOpenDialog(false)} />}
     </Container>
   );
 }

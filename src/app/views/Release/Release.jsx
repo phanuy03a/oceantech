@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import Breadcrumb from "app/components/Breadcrumb";
 import MaterialTable from "@material-table/core";
 import { Button, Box, Icon, IconButton, styled, Table, Tooltip } from "@mui/material";
-import ManagerEmployeeDialog from "./ManagerEmployeeDialog";
 const Container = styled("div")(({ theme }) => ({
   margin: "30px",
   [theme.breakpoints.down("sm")]: { margin: "16px" },
@@ -12,18 +11,16 @@ const Container = styled("div")(({ theme }) => ({
   },
 }));
 
-function ManagerEmployee() {
-  const [openManagerEmployeeDialog, setOpenManagerEmployeeDialog] = useState(false);
-
+function Release() {
   const columns = [
     {
       title: "Hành động",
       render: (rowData) => {
         return (
           <>
-            <Tooltip title="Cập nhật diễn biến">
-              <IconButton onClick={() => setOpenManagerEmployeeDialog(true)}>
-                <Icon color="success">trending_up_icon</Icon>
+            <Tooltip title="abc">
+              <IconButton>
+                <Icon color="success">visibilityIcon</Icon>
               </IconButton>
             </Tooltip>
           </>
@@ -78,14 +75,12 @@ function ManagerEmployee() {
   return (
     <Container>
       <Box className="breadcrumb">
-        <Breadcrumb
-          routeSegments={[{ name: "Quản lý", path: "/" }, { name: "Quản lý nhân viên" }]}
-        />
+        <Breadcrumb routeSegments={[{ name: "Quản lý", path: "/" }, { name: "Kết thúc" }]} />
       </Box>
 
       <Box width="100%" overflow="auto">
         <MaterialTable
-          title={"Danh sách nhân viên"}
+          title={"Danh sách kết thúc"}
           data={data}
           columns={columns}
           options={{
@@ -103,16 +98,13 @@ function ManagerEmployee() {
             // padding: 'dense',
             padding: "default",
             // search: false,
-            // exportButton: true,0
+            // exportButton: true,
             toolbar: true,
           }}
         />
       </Box>
-      {openManagerEmployeeDialog && (
-        <ManagerEmployeeDialog handleClose={() => setOpenManagerEmployeeDialog(false)} />
-      )}
     </Container>
   );
 }
 
-export default ManagerEmployee;
+export default Release;

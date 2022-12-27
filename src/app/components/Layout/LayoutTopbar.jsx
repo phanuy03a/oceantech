@@ -4,7 +4,9 @@ import { Span } from "../Typography";
 import { Link } from "react-router-dom";
 import { Icon, IconButton, MenuItem, Hidden, Avatar } from "@mui/material";
 import MenuTopBar from "./MenuTopBar";
-const StyledIconButton = styled(IconButton)(() => ({}));
+const StyledIconButton = styled(IconButton)(() => ({
+  color: "black",
+}));
 const TopbarRoot = styled("div")(() => ({
   top: 0,
   zIndex: 96,
