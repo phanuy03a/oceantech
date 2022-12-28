@@ -29,9 +29,9 @@ function EmployeeDialogInfo(props) {
     <>
       <Grid container spacing={2}>
         <Grid item container spacing={1} xs={12}>
-          <Grid item>
+          {/* <Grid item>
             <Label>Thông tin chính</Label>
-          </Grid>
+          </Grid> */}
           <Grid item container spacing={2}>
             <Grid item xs={3}>
               <TextField fullWidth size="small" label="Tên nhân viên" variant="outlined" />
@@ -85,9 +85,9 @@ function EmployeeDialogInfo(props) {
         </Grid>
 
         <Grid item container xs={12} spacing={1}>
-          <Grid item>
+          {/* <Grid item>
             <Label> Địa chỉ</Label>
-          </Grid>
+          </Grid> */}
           <Grid item container xs={12} spacing={2}>
             <Grid item xs={3}>
               <TextField
@@ -113,9 +113,9 @@ function EmployeeDialogInfo(props) {
         <Grid item container>
           <Grid item container xs={12} spacing={2}>
             <Grid item container xs={6} spacing={1}>
-              <Grid item>
+              {/* <Grid item>
                 <Label> Căn cước công dân</Label>
-              </Grid>
+              </Grid> */}
               <Grid item container xs={12} spacing={2}>
                 <Grid item xs={4}>
                   <TextField fullWidth select size="small" label="Nơi cấp" variant="outlined" />
@@ -130,9 +130,9 @@ function EmployeeDialogInfo(props) {
               </Grid>
             </Grid>
             <Grid item container xs={6} spacing={1}>
-              <Grid item>
+              {/* <Grid item>
                 <Label> Khác</Label>
-              </Grid>
+              </Grid> */}
               <Grid item container xs={12} spacing={2}>
                 <Grid item xs={4}>
                   <TextField select fullWidth size="small" label="Nhóm" variant="outlined">

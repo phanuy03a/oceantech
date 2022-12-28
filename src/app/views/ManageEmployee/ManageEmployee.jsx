@@ -34,7 +34,6 @@ function ManagerEmployee() {
     { title: "Tuổi", field: "age" },
     { title: "Email", field: "email" },
     { title: "Số điện thoại", field: "phone" },
-    { title: "Trạng thái", field: "status.title" },
   ];
 
   const data = [
@@ -43,35 +42,30 @@ function ManagerEmployee() {
       age: "11",
       email: "abcdef@gmail.com",
       phone: "012456789",
-      status: { id: 1, title: "Đã duyệt" },
     },
     {
       name: "Vũ nhôm",
       age: "22",
       email: "abcdef@gmail.com",
       phone: "012456789",
-      status: { id: 2, title: "Chờ duyệt" },
     },
     {
       name: "Trung tình",
       age: "33",
       email: "abcdef@gmail.com",
       phone: "012456789",
-      status: { id: 2, title: "Chờ duyệt" },
     },
     {
       name: "Huy",
       age: "44",
       email: "abcdef@gmail.com",
       phone: "012456789",
-      status: { id: 3, title: "Chờ nộp hồ sơ" },
     },
     {
       name: "Cuốc Lươn",
       age: "55",
       email: "abcdef@gmail.com",
       phone: "012456789",
-      status: { id: 4, title: "Yêu cầu bổ sung" },
     },
   ];
 
@@ -85,7 +79,7 @@ function ManagerEmployee() {
 
       <Box width="100%" overflow="auto">
         <MaterialTable
-          title={"Danh sách nhân viên"}
+          title={""}
           data={data}
           columns={columns}
           options={{

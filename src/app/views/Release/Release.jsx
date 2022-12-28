@@ -80,7 +80,7 @@ function Release() {
 
       <Box width="100%" overflow="auto">
         <MaterialTable
-          title={"Danh sách kết thúc"}
+          title={""}
           data={data}
           columns={columns}
           options={{

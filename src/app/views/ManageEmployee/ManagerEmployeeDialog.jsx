@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -12,98 +12,74 @@ import {
   MenuItem,
   IconButton,
   Icon,
+  Paper,
+  Card,
 } from "@mui/material";
-import { Close } from "@mui/icons-material";
-const listField = [
-  { name: "Ngoại ngữ" },
-  { name: "Tin học văn phòng" },
-  { name: "Kỹ năng giao tiếp" },
+
+import ReleaseDialog from "./ReleaseDialog";
+import EmployeeCard from "app/components/EmployeeCard/EmployeeCard";
+import EmployeeCardDetail from "app/components/EmployeeCard/EmloyeeCardDetail";
+const ListUpdate = [
+  { id: 1, name: "Lương" },
+  { id: 2, name: "Chức Vụ" },
+  { id: 3, name: "Nhóm" },
 ];
 
 function ManagerEmployeeDialog({ handleClose }) {
-  return (
-    <Dialog open={true} onClose={handleClose} maxWidth="md" fullWidth>
-      <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        Cập nhật diễn biến
-        <IconButton onClick={() => handleClose()}>
-          <Icon color="error">close</Icon>
-        </IconButton>
-      </DialogTitle>
+  const [shouldOpenDialog, setShouldOpenDialog] = useState(false);
 
-      <DialogContent>
-        <Grid container spacing={2}>
-          <Grid item sm={12} xs={12}>
-            <TextField
-              label="Tên văn bằng"
-              type="text"
-              fullWidth
-              variant="outlined"
-              name="name"
-              size="small"
-            />
+  return (
+    <>
+      {" "}
+      <Dialog open={true} onClose={handleClose} maxWidth="md" fullWidth>
+        <DialogTitle
+          sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+        >
+          Cập nhật diễn biến
+          <IconButton onClick={() => handleClose()}>
+            <Icon color="error">close</Icon>
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent>
+          <Grid container xs={12} spacing={4}>
+            <Grid item container xs={4} spacing={2}>
+              <Grid item xs={12}>
+                <EmployeeCard />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField select fullWidth label="Cập nhật">
+                  {ListUpdate.map((item) => (
+                    <MenuItem key={item.id} value={item.name}>
+                      {item.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+            </Grid>
+            <Grid item container xs={8} spacing={2}>
+              <EmployeeCardDetail />
+            </Grid>
           </Grid>
-          <Grid item sm={12} xs={12}>
-            <TextField
-              label="Nội dung văn bằng"
-              type="text"
-              fullWidth
-              variant="outlined"
-              name="content"
-              size="small"
-            />
-          </Grid>
-          <Grid item sm={4} xs={4}>
-            <TextField
-              select
-              label="Nơi cấp"
-              type="text"
-              fullWidth
-              size="small"
-              variant="outlined"
-              name="diplomaAddress"
-            ></TextField>
-          </Grid>
-          <Grid item sm={4} xs={4}>
-            <TextField
-              fullWidth
-              size="small"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              type="date"
-              label="Ngày cấp"
-              variant="outlined"
-            />
-          </Grid>
-          <Grid item sm={4} xs={4}>
-            <TextField
-              select
-              label="Lĩnh vực"
-              type="text"
-              fullWidth
-              variant="outlined"
-              name="field"
-              size="small"
-            >
-              {listField.map((item) => (
-                <MenuItem value={item.name}>{item.name}</MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-        </Grid>
-      </DialogContent>
-      <DialogActions>
-        <Button variant="contained" sx={{ mb: 2, background: "#FF9E43" }} onClick={handleClose}>
-          Hủy
-        </Button>
-        <Button variant="contained" sx={{ mb: 2, background: "#d32f2f" }}>
-          Kết thúc
-        </Button>
-        <Button variant="contained" sx={{ mb: 2, background: "#7467EF" }}>
-          Xác nhận
-        </Button>
-      </DialogActions>
-    </Dialog>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" sx={{ mb: 2, background: "#FF9E43" }} onClick={handleClose}>
+            Hủy
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ mb: 2, background: "#d32f2f" }}
+            onClick={() => setShouldOpenDialog(true)}
+          >
+            Kết thúc
+          </Button>
+          <Button variant="contained" sx={{ mb: 2, background: "#7467EF" }}>
+            Xác nhận
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {shouldOpenDialog && <ReleaseDialog handleClose={() => setShouldOpenDialog(false)} />}
+    </>
   );
 }
 

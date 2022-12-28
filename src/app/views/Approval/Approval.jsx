@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import Breadcrumb from "app/components/Breadcrumb";
 import MaterialTable from "@material-table/core";
 import { Button, Box, Icon, IconButton, styled, Table, Tooltip } from "@mui/material";
+import ApprovalDialog from "./ApprovalDialog";
 const Container = styled("div")(({ theme }) => ({
   margin: "30px",
   [theme.breakpoints.down("sm")]: { margin: "16px" },
@@ -12,6 +13,7 @@ const Container = styled("div")(({ theme }) => ({
 }));
 
 function Approval() {
+  const [shouldOpenDialog, setShouldOpenDialog] = useState(false);
   const columns = [
     {
       title: "Hành động",
@@ -19,13 +21,8 @@ function Approval() {
         return (
           <>
             <Tooltip title="Xem chi tiết">
-              <IconButton>
+              <IconButton onClick={() => setShouldOpenDialog(true)}>
                 <Icon color="success">visibilityIcon</Icon>
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Duyệt">
-              <IconButton>
-                <Icon color="primary">check</Icon>
               </IconButton>
             </Tooltip>
           </>
@@ -36,7 +33,6 @@ function Approval() {
     { title: "Tuổi", field: "age" },
     { title: "Email", field: "email" },
     { title: "Số điện thoại", field: "phone" },
-    { title: "Trạng thái", field: "status.title" },
   ];
 
   const data = [
@@ -45,35 +41,30 @@ function Approval() {
       age: "11",
       email: "abcdef@gmail.com",
       phone: "012456789",
-      status: { id: 1, title: "Đã duyệt" },
     },
     {
       name: "Vũ nhôm",
       age: "22",
       email: "abcdef@gmail.com",
       phone: "012456789",
-      status: { id: 2, title: "Chờ duyệt" },
     },
     {
       name: "Trung tình",
       age: "33",
       email: "abcdef@gmail.com",
       phone: "012456789",
-      status: { id: 2, title: "Chờ duyệt" },
     },
     {
       name: "Huy",
       age: "44",
       email: "abcdef@gmail.com",
       phone: "012456789",
-      status: { id: 3, title: "Chờ nộp hồ sơ" },
     },
     {
       name: "Cuốc Lươn",
       age: "55",
       email: "abcdef@gmail.com",
       phone: "012456789",
-      status: { id: 4, title: "Yêu cầu bổ sung" },
     },
   ];
 
@@ -85,7 +76,7 @@ function Approval() {
 
       <Box width="100%" overflow="auto">
         <MaterialTable
-          title={"Quản lý nhân viên"}
+          title={""}
           data={data}
           columns={columns}
           options={{
@@ -100,14 +91,14 @@ function Approval() {
               backgroundColor: "#222943",
               color: "#fff",
             },
-            // padding: 'dense',
+
             padding: "default",
-            // search: false,
-            // exportButton: true,
+
             toolbar: true,
           }}
         />
       </Box>
+      {shouldOpenDialog && <ApprovalDialog handleClose={() => setShouldOpenDialog(false)} />}
     </Container>
   );
 }

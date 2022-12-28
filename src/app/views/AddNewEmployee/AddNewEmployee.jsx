@@ -19,7 +19,7 @@ function AddNewEmployee() {
     {
       title: "Hành động",
       render: (rowData) => {
-        const isDisabled = rowData.status?.id !== 1 && rowData.status?.id !== 3;
+        const isDisabled = rowData.status?.id !== 1;
         return (
           <>
             <Tooltip title="Sửa">
@@ -49,7 +49,7 @@ function AddNewEmployee() {
       age: "11",
       email: "abcdef@gmail.com",
       phone: "012456789",
-      status: { id: 1, title: "Đã duyệt" },
+      status: { id: 1, title: "Thêm mới" },
     },
     {
       name: "Vũ nhôm",
@@ -101,7 +101,7 @@ function AddNewEmployee() {
 
       <Box width="100%" overflow="auto">
         <MaterialTable
-          title={"Danh sách thêm mới"}
+          title={""}
           data={data}
           columns={columns}
           options={{
