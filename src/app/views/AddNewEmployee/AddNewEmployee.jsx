@@ -11,7 +11,6 @@ const Container = styled("div")(({ theme }) => ({
     [theme.breakpoints.down("sm")]: { marginBottom: "16px" },
   },
 }));
-
 function AddNewEmployee() {
   const [shouldOpenDialog, setShouldOpenDialog] = useState(false);
 
@@ -22,6 +21,11 @@ function AddNewEmployee() {
         const isDisabled = rowData.status?.id !== 1;
         return (
           <>
+            <Tooltip title="Xem chi tiết">
+              <IconButton disabled={isDisabled}>
+                <Icon color={isDisabled ? "disabled" : "success"}>visibilityIcon</Icon>
+              </IconButton>
+            </Tooltip>
             <Tooltip title="Sửa">
               <IconButton onClick={() => setShouldOpenDialog(true)}>
                 <Icon color="primary">edit</Icon>
@@ -49,7 +53,7 @@ function AddNewEmployee() {
       age: "11",
       email: "abcdef@gmail.com",
       phone: "012456789",
-      status: { id: 1, title: "Thêm mới" },
+      status: { id: 1, title: "Lưu mới" },
     },
     {
       name: "Vũ nhôm",
@@ -120,12 +124,13 @@ function AddNewEmployee() {
             padding: "default",
             // search: false,
             // exportButton: true,
-            toolbar: true,
+            toolbar: false,
           }}
         />
       </Box>
 
       {shouldOpenDialog && <AddNewEmployeeDialog handleClose={() => setShouldOpenDialog(false)} />}
+      {/* <AddNewEmployeeDialog handleClose={() => setShouldOpenDialog(false)} /> */}
     </Container>
   );
 }

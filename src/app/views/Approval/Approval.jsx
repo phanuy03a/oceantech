@@ -99,6 +99,7 @@ function Approval() {
         />
       </Box>
       {shouldOpenDialog && <ApprovalDialog handleClose={() => setShouldOpenDialog(false)} />}
+      {/* <ApprovalDialog handleClose={() => setShouldOpenDialog(false)} /> */}
     </Container>
   );
 }

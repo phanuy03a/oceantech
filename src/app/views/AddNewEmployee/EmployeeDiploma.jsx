@@ -3,7 +3,7 @@ import MaterialTable from "@material-table/core";
 import { Box, Button } from "@mui/material";
 import EmployeeDiplomaDialog from "./EmployeeDiplomaDialog";
 
-function EmployeeDialogDiploma(props) {
+function EmployeeDiploma(props) {
   const [shouldOpenDialog, setShouldOpenDialog] = useState(false);
   const handleClose = () => {
     setShouldOpenDialog(false);
@@ -75,4 +75,4 @@ function EmployeeDialogDiploma(props) {
   );
 }
 
-export default EmployeeDialogDiploma;
+export default EmployeeDiploma;

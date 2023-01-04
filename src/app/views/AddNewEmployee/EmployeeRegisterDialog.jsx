@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
-
+import Resume from "app/components/ProfileEmployee/Resume";
+import Diploma from "app/components/ProfileEmployee/Diploma";
+import Relation from "app/components/ProfileEmployee/Relation";
 import {
   Dialog,
   DialogContent,
@@ -48,7 +50,7 @@ function a11yProps(index) {
   };
 }
 
-export default function ApprovalDialog({ handleClose }) {
+export default function EmployeeRegisterDialog({ handleClose }) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -73,12 +75,18 @@ export default function ApprovalDialog({ handleClose }) {
           sx={{ borderRight: 1, borderColor: "divider" }}
         >
           <Tab label="Hồ sơ" {...a11yProps(0)} />
-          <Tab label="Danh sách văn bằng" {...a11yProps(1)} />
-          <Tab label="Sơ yếu lý lịch" {...a11yProps(2)} />
+          <Tab label="Sơ yếu lý lịch" {...a11yProps(1)} />
+          <Tab label="Danh sách văn bằng" {...a11yProps(2)} />
         </Tabs>
-        <TabPanel value={value} index={0} style={{ width: "100%" }}></TabPanel>
-        <TabPanel value={value} index={1} style={{ width: "100%" }}></TabPanel>
-        <TabPanel value={value} index={2} style={{ width: "100%" }}></TabPanel>
+        <TabPanel value={value} index={0} style={{ width: "100%" }}>
+          <Resume></Resume>
+        </TabPanel>
+        <TabPanel value={value} index={1} style={{ width: "100%" }}>
+          <Relation></Relation>
+        </TabPanel>
+        <TabPanel value={value} index={2} style={{ width: "100%" }}>
+          <Diploma></Diploma>
+        </TabPanel>
       </DialogContent>
       <DialogActions>
         <Button
