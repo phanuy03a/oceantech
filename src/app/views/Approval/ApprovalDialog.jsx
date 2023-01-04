@@ -14,6 +14,7 @@ import {
   IconButton,
   Icon,
 } from "@mui/material";
+import Resume from "./Resume";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -56,7 +57,7 @@ export default function ApprovalDialog({ handleClose }) {
   };
 
   return (
-    <Dialog open={true} maxWidth={"md"} fullWidth>
+    <Dialog open={true} maxWidth={"lg"} fullWidth>
       <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         Hồ sơ nhân viên
         <IconButton onClick={() => handleClose()}>
@@ -76,8 +77,8 @@ export default function ApprovalDialog({ handleClose }) {
           <Tab label="Văn bằng" {...a11yProps(1)} />
           <Tab label="Quan hệ gia đình" {...a11yProps(2)} />
         </Tabs>
-        <TabPanel value={value} index={0}>
-          <img style={{ width: "100%" }} src="assets/images/resume.jpg" alt="" />
+        <TabPanel value={value} index={0} style={{ width: "100%" }}>
+          <Resume />
         </TabPanel>
         <TabPanel value={value} index={1} style={{ width: "100%" }}>
           Item Two

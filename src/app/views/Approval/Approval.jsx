@@ -13,7 +13,7 @@ const Container = styled("div")(({ theme }) => ({
 }));
 
 function Approval() {
-  const [shouldOpenDialog, setShouldOpenDialog] = useState(false);
+  const [shouldOpenDialog, setShouldOpenDialog] = useState(true);
   const columns = [
     {
       title: "Hành động",
