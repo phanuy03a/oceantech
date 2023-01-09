@@ -1,39 +1,65 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddNewEmployeeDialog from "./AddNewEmployeeDialog";
 import Breadcrumb from "app/components/Breadcrumb";
 import { Button, Box, Icon, IconButton, styled, Tooltip } from "@mui/material";
 import MaterialTable from "@material-table/core";
-const Container = styled("div")(({ theme }) => ({
+
+import {
+  getListEmployeeRequest,
+  getListLocation,
+  getOtherFeature,
+} from "app/redux/actions/actions";
+import { useDispatch, useSelector } from "react-redux";
+
+import moment from "moment";
+import { ComponentModel } from "echarts";
+
+const Container = styled("div")(() => ({
   margin: "30px",
-  [theme.breakpoints.down("sm")]: { margin: "16px" },
   "& .breadcrumb": {
     marginBottom: "30px",
-    [theme.breakpoints.down("sm")]: { marginBottom: "16px" },
   },
 }));
-function AddNewEmployee() {
-  const [shouldOpenDialog, setShouldOpenDialog] = useState(false);
 
+function AddNewEmployee() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getListEmployeeRequest());
+    dispatch(getListLocation());
+    dispatch(getOtherFeature());
+  }, []);
+  const listAddNew = useSelector((state) => state.Employee.listEmployee);
+  const [shouldOpenDialog, setShouldOpenDialog] = useState(false);
+  const [employee, setEmployee] = useState({});
+  const handleChangeEmployee = (rowdata, method) => {
+    if (method == 1) {
+      setShouldOpenDialog(true);
+      setEmployee(rowdata);
+    }
+  };
+  const handleClose = () => {
+    setShouldOpenDialog(false);
+    setEmployee({});
+  };
   const columns = [
     {
       title: "Hành động",
       render: (rowData) => {
-        const isDisabled = rowData.status?.id !== 1;
         return (
           <>
             <Tooltip title="Xem chi tiết">
-              <IconButton disabled={isDisabled}>
-                <Icon color={isDisabled ? "disabled" : "success"}>visibilityIcon</Icon>
+              <IconButton>
+                <Icon color={"success"}>visibilityIcon</Icon>
               </IconButton>
             </Tooltip>
             <Tooltip title="Sửa">
-              <IconButton onClick={() => setShouldOpenDialog(true)}>
+              <IconButton onClick={() => handleChangeEmployee(rowData, 1)}>
                 <Icon color="primary">edit</Icon>
               </IconButton>
             </Tooltip>
             <Tooltip title="Xóa">
-              <IconButton disabled={isDisabled}>
-                <Icon color={isDisabled ? "disabled" : "error"}>delete</Icon>
+              <IconButton>
+                <Icon color={"error"}>delete</Icon>
               </IconButton>
             </Tooltip>
           </>
@@ -41,48 +67,14 @@ function AddNewEmployee() {
       },
     },
     { title: "Họ tên", field: "name" },
-    { title: "Tuổi", field: "age" },
+    {
+      title: "Ngày sinh",
+      field: "birthDay",
+      render: (rowdata) => moment(rowdata).format("DD/MM/YYYY"),
+    },
     { title: "Email", field: "email" },
     { title: "Số điện thoại", field: "phone" },
-    { title: "Trạng thái", field: "status.title" },
-  ];
-
-  const data = [
-    {
-      name: "Uy ko tín",
-      age: "11",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-      status: { id: 1, title: "Lưu mới" },
-    },
-    {
-      name: "Vũ nhôm",
-      age: "22",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-      status: { id: 2, title: "Chờ duyệt" },
-    },
-    {
-      name: "Trung tình",
-      age: "33",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-      status: { id: 2, title: "Chờ duyệt" },
-    },
-    {
-      name: "Huy",
-      age: "44",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-      status: { id: 3, title: "Chờ nộp hồ sơ" },
-    },
-    {
-      name: "Cuốc Lươn",
-      age: "55",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-      status: { id: 4, title: "Yêu cầu bổ sung" },
-    },
+    { title: "Trạng thái", field: "status" },
   ];
 
   return (
@@ -106,7 +98,7 @@ function AddNewEmployee() {
       <Box width="100%" overflow="auto">
         <MaterialTable
           title={""}
-          data={data}
+          data={listAddNew}
           columns={columns}
           options={{
             rowStyle: (rowData, index) => {
@@ -129,8 +121,8 @@ function AddNewEmployee() {
         />
       </Box>
 
-      {shouldOpenDialog && <AddNewEmployeeDialog handleClose={() => setShouldOpenDialog(false)} />}
-      {/* <AddNewEmployeeDialog handleClose={() => setShouldOpenDialog(false)} /> */}
+      {shouldOpenDialog && <AddNewEmployeeDialog employee={employee} handleClose={handleClose} />}
+      {/* <AddNewEmployeeDialog handleClose={handleClose} employee={employee} /> */}
     </Container>
   );
 }

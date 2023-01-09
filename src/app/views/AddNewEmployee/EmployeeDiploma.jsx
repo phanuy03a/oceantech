@@ -4,19 +4,12 @@ import { Box, Button } from "@mui/material";
 import EmployeeDiplomaDialog from "./EmployeeDiplomaDialog";
 
 function EmployeeDiploma(props) {
+  const { handleAddToFomik } = props;
   const [shouldOpenDialog, setShouldOpenDialog] = useState(false);
   const handleClose = () => {
     setShouldOpenDialog(false);
   };
-  const listDiploma = [
-    {
-      name: "Bùi Trịnh",
-      content: "Quang",
-      diplomaAddress: "Hú",
-      diplomaDate: "20/11/2001",
-      sector: "Đánh bạc",
-    },
-  ];
+
   return (
     <>
       <Box className="box" justifyContent="flex-end">
@@ -48,7 +41,7 @@ function EmployeeDiploma(props) {
           { title: "Ngày cấp", field: "diplomaDate" },
           { title: "Lĩnh vực", field: "sector" },
         ]}
-        data={listDiploma}
+        data={[]}
         actions={[
           {
             icon: "edit",
@@ -70,7 +63,13 @@ function EmployeeDiploma(props) {
           toolbar: false,
         }}
       />
-      {shouldOpenDialog && <EmployeeDiplomaDialog open={open} handleClose={handleClose} />}
+      {shouldOpenDialog && (
+        <EmployeeDiplomaDialog
+          open={open}
+          handleClose={handleClose}
+          handleAddToFomik={handleAddToFomik}
+        />
+      )}
     </>
   );
 }

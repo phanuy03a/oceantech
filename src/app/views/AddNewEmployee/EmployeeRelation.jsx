@@ -3,24 +3,12 @@ import MaterialTable from "@material-table/core";
 import { Box, Button } from "@mui/material";
 import EmployeeRelationDialog from "./EmployeeRelationDialog";
 function EmployeeRelation(props) {
+  const { handleAddToFomik } = props;
   const [shouldOpenDialog, setShouldOpenDialog] = useState(false);
   const handleClose = () => {
     setShouldOpenDialog(false);
   };
-  const listRelation = [
-    {
-      name: "Uy",
-      birthday: "26/00/2001",
-      gender: "Nam",
-      relationship: "Bố",
-      address: {
-        addressDetail: "Số 12",
-        commune: "An nội",
-        district: "Bình lục",
-        province: "Hà nam",
-      },
-    },
-  ];
+
   return (
     <>
       <Box className="box" justifyContent="flex-end">
@@ -59,7 +47,7 @@ function EmployeeRelation(props) {
               `${rowData.address.addressDetail} - ${rowData.address.commune} - ${rowData.address.district} - ${rowData.address.province}`,
           },
         ]}
-        data={listRelation}
+        data={[]}
         actions={[
           {
             icon: "edit",
@@ -81,7 +69,13 @@ function EmployeeRelation(props) {
           toolbar: false,
         }}
       />
-      {shouldOpenDialog && <EmployeeRelationDialog open={open} handleClose={handleClose} />}
+      {shouldOpenDialog && (
+        <EmployeeRelationDialog
+          open={open}
+          handleClose={handleClose}
+          handleAddToFomik={handleAddToFomik}
+        />
+      )}
     </>
   );
 }
