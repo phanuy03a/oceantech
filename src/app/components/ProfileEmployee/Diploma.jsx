@@ -1,56 +1,58 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import MaterialTable from "@material-table/core";
-const listDiploma = [
-  {
-    name: "Bằng kĩ sư",
-    content: "Front-end",
-    diplomaAddress: "PTIT",
-    diplomaDate: "20/11/2026",
-    sector: "Giáo dục",
-  },
-];
-function Diploma(props) {
+import { Tooltip, Icon, IconButton } from "@mui/material";
+const Diploma = React.forwardRef((props, ref) => {
+  const employeeData = useSelector((state) => state.Employee.employeeData);
+  const columns = [
+    {
+      title: "Hành động",
+      render: (rowData) => {
+        return (
+          <>
+            <Tooltip title="Sửa">
+              <IconButton>
+                <Icon color="success">visibilityIcon</Icon>
+              </IconButton>
+            </Tooltip>
+          </>
+        );
+      },
+    },
+    { title: "Tên văn bằng", field: "name" },
+    {
+      title: "Nội dung ",
+      field: "content",
+    },
+    { title: "Nơi cấp", field: "place" },
+    { title: "Ngày cấp", field: "date" },
+    { title: "Lĩnh Vực", render: (rowData) => rowData.field.fieldName },
+  ];
+
   return (
-    <>
-      {" "}
+    <div ref={ref}>
       <MaterialTable
-        localization={{
-          header: {
-            actions: "Thao tác",
-          },
-        }}
-        columns={[
-          {
-            title: "STT",
-            field: "STT",
-            width: "10px",
-            render: (rowData, index) => rowData.tableData.id + 1,
-          },
-          { title: "Tên", field: "name" },
-          { title: "Nội dung", field: "content" },
-          { title: "Nơi cấp", field: "diplomaAddress" },
-          { title: "Ngày cấp", field: "diplomaDate" },
-          { title: "Lĩnh vực", field: "sector" },
-        ]}
-        data={[]}
-        actions={[
-          {
-            icon: "visibilityIcon",
-            width: 10,
-            tooltip: "Xem chi tiết",
-            iconProps: { style: { color: "green" } },
-          },
-        ]}
+        title={""}
+        data={employeeData?.listDiploma}
+        columns={columns}
         options={{
-          search: false,
-          draggable: true,
-          paging: true,
-          pageSize: 3,
+          rowStyle: (rowData, index) => {
+            return {
+              backgroundColor: index % 2 === 1 ? "#EEE" : "#FFF",
+            };
+          },
+          maxBodyHeight: "1000px",
+          minBodyHeight: "370px",
+
+          // padding: 'dense',
+          padding: "default",
+          // search: false,
+          // exportButton: true,
           toolbar: false,
         }}
       />
-    </>
+    </div>
   );
-}
+});
 
 export default Diploma;

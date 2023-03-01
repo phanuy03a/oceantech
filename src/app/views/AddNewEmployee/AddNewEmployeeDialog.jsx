@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Tab from "@mui/material/Tab";
 import { Dialog, DialogTitle, Box, Button, DialogActions, DialogContent } from "@mui/material";
 import EmployeeRegisterDialog from "./EmployeeRegisterDialog";
@@ -10,12 +10,27 @@ import EmployeeInfo from "./EmployeeInfo";
 import EmployeeDiploma from "./EmployeeDiploma";
 import EmployeeRelation from "./EmployeeRelation";
 import { useFormik } from "formik";
-import moment from "moment";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { addNewEmployee, updateEmployee, getEmployeeData } from "app/redux/actions/actions";
+
 import * as Yup from "yup";
+import { useSelector, useDispatch } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 function AddNewEmployeeDialog(props) {
   const [shouldOpenDialog, setShouldOpenDialog] = useState(false);
+  const dispatch = useDispatch();
   const [saved, setSaved] = useState("none");
-  const { handleClose, employee } = props;
+  const { handleClose } = props;
+  const employee = useSelector((state) => state.Employee.employeeData);
+  const [employeeData, setEmployee] = useState(employee);
+  useEffect(() => {
+    setEmployee(employee);
+  }, [employee]);
+  const handleAddToList = (data, method) => {
+    setEmployee({ ...employeeData, [method]: [...employeeData[method], data] });
+  };
+  const [employeeId, setEmployeeId] = useState(employeeData.id);
   const [value, setValue] = React.useState("1");
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -23,29 +38,36 @@ function AddNewEmployeeDialog(props) {
 
   const formik = useFormik({
     initialValues: {
-      fullName: employee?.fullName || "",
-      code: employee?.code || "",
-      phone: employee?.phone || "",
-      birthplace: employee?.birthday || "",
-      email: employee?.email || "",
-      address: employee?.address || "",
-      identityCode: employee?.identityCode || "",
-      placeIssue: employee?.placeIssue?.place || "",
-      ethnic: employee?.ethnic || "",
-      religion: employee?.religion || "",
-      salary: employee?.salary || "",
-      birthplace: employee?.birthplace || "",
-      district: employee?.district?.name || "",
-      province: employee?.province?.name || "",
-      commune: employee?.commune?.name || "",
-      gender: employee?.gender || "",
-      position: employee.position || "",
-      team: employee.team || "",
-      birthday: employee?.birthDay || "2002-08-01",
-      dateIssue: employee?.dateIssue ? moment(employee?.dateIssue).format("YYYY-MM-DD") : "",
-      image: employee?.image || null,
-      listDiploma: employee?.listDiploma || [],
-      listRelationship: employee?.listRelationship || [],
+      fullName: employeeData?.fullName || "",
+      code: employeeData?.code || "",
+      phone: employeeData?.phone || "",
+
+      email: employeeData?.email || "",
+      address: employeeData?.address || "",
+      identityCode: employeeData?.identityCode || "",
+      placeIssue: employeeData?.placeIssue || null,
+      ethnic: employeeData?.ethnic || "",
+      religion: employeeData?.religion || "",
+      salary: employeeData?.salary || "",
+      birthplace: employeeData?.birthplace || "",
+      district: employeeData?.district || null,
+      province: employeeData?.province || null,
+      commune: employeeData?.commune || null,
+      gender: employeeData?.gender || "",
+      position: employeeData.position || "",
+      team: employeeData.team || "",
+      birthday: employeeData?.birthday || "",
+      dateIssue: employeeData?.dateIssue || "",
+      image: employeeData?.image || "/assets/images/illustrations/dreamer.svg",
+      listDiploma: employeeData?.listDiploma || [],
+      listRelationship: employeeData?.listRelationship || [],
+      education: employeeData?.education || [""],
+      experience: employeeData?.experience || [""],
+      generalIntroduction: employeeData?.generalIntroduction || [""],
+      careerGoals: employeeData?.careerGoals || [""],
+      skill: employeeData?.skill || [""],
+      hobby: employeeData?.hobby || [""],
+      status: employeeData?.status || "Lưu mới",
     },
     validationSchema: Yup.object({
       fullName: Yup.string()
@@ -59,7 +81,7 @@ function AddNewEmployeeDialog(props) {
       email: Yup.string().required("Không được bỏ trống"),
       address: Yup.string().required("Không được bỏ trống"),
       identityCode: Yup.string().required("Không được bỏ trống"),
-      placeIssue: Yup.string().required("Chọn nơi cấp"),
+      placeIssue: Yup.object().nullable().required("Chọn nơi cấp"),
 
       ethnic: Yup.string().required("Không được bỏ trống"),
       religion: Yup.string().required("Không được bỏ trống"),
@@ -70,32 +92,54 @@ function AddNewEmployeeDialog(props) {
         .max(new Date(Date.now() - 567648000000), "Yêu cầu trên 18 tuổi")
         .min(new Date(Date.now() - 1892160000000), "Yêu cầu dưới 60 tuổi")
         .required("Vui lòng nhập ngày"),
-      image: Yup.string().nullable().required("Vui lòng chọn ảnh nhân viên!"),
+
       gender: Yup.string().required("Không được bỏ trống"),
-      province: Yup.string().required("Không được bỏ trống"),
-      district: Yup.string().required("Không được bỏ trống"),
-      commune: Yup.string().required("Không được bỏ trống"),
+      province: Yup.object().nullable().required("Không được bỏ trống"),
+      district: Yup.object().required("Không được bỏ trống").nullable(),
+      commune: Yup.object().required("Không được bỏ trống").nullable(),
       team: Yup.string().required("Không được bỏ trống"),
       position: Yup.string().required("Không được bỏ trống"),
     }),
-    onSubmit: (data) => {
-      console.log(data);
+    onSubmit: (values) => {
+      if (!employeeId) {
+        values.id = uuidv4();
+        values.status = "Lưu mới";
+        setEmployeeId(values.id);
+        dispatch(addNewEmployee(values));
+        toast.success("Lưu mới thành công");
+      } else {
+        values.id = employeeId;
+        values.listDiploma = employeeData.listDiploma;
+        values.listRelationship = employeeData.listRelationship;
+        const updateData = { ...employeeData, ...values };
+        console.log(updateData);
+        dispatch(updateEmployee(updateData));
+        toast.success("Cập nhật thành công");
+      }
       setSaved("block");
+      setShouldOpenDialog(false);
     },
   });
-  const handleAddToFomik = (value, method) => {
-    console.log(value, method);
-    if (method === "diploma") formik.values.listDiploma.push(value);
-    if (method === "relationship") formik.values.listRelationship.push(value);
-  };
 
   return (
     <>
-      <Dialog open={true} maxWidth={"lg"} fullWidth>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+      <Dialog open={true} maxWidth={"lg"} fullWidth={true}>
         <DialogTitle
           sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
         >
-          {Object.keys(employee).length === 0 ? "Thêm mới nhân viên" : "Sửa nhân viên"}
+          {!employeeData.id ? "Thêm mới nhân viên" : "Sửa nhân viên"}
           <Box onClick={() => handleClose()}>
             <Close color="error"></Close>
           </Box>
@@ -108,7 +152,7 @@ function AddNewEmployeeDialog(props) {
                 sx={{
                   borderBottom: 1,
                   borderColor: "divider",
-                  background: "#eee",
+                  background: "#ddd",
                 }}
               >
                 <TabList onChange={handleChange}>
@@ -121,10 +165,10 @@ function AddNewEmployeeDialog(props) {
                 <EmployeeInfo formikRoot={formik} />
               </TabPanel>
               <TabPanel value="2" sx={{ p: "20px 0" }}>
-                <EmployeeDiploma handleAddToFomik={handleAddToFomik} />
+                <EmployeeDiploma employeeData={employeeData} handleAddDiploma={handleAddToList} />
               </TabPanel>
               <TabPanel value="3" sx={{ p: "20px 0" }}>
-                <EmployeeRelation handleAddToFomik={handleAddToFomik} />
+                <EmployeeRelation employeeData={employeeData} handleAddRelation={handleAddToList} />
               </TabPanel>
             </TabContext>
           </DialogContent>
@@ -154,15 +198,19 @@ function AddNewEmployeeDialog(props) {
       </Dialog>
       {shouldOpenDialog && (
         <EmployeeRegisterDialog
+          handleAddToList={handleAddToList}
           handleClose={() => {
             setShouldOpenDialog(false);
           }}
+          handleCloseAll={handleClose}
         />
       )}
       {/* <EmployeeRegisterDialog
+        formikRoot={formik}
         handleClose={() => {
           setShouldOpenDialog(false);
         }}
+        handleAddToFomik={handleAddToFomik}
       /> */}
     </>
   );

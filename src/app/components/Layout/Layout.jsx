@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import styled from "@emotion/styled";
 import { Box } from "@mui/material";
@@ -10,13 +10,13 @@ const LayoutRoot = styled(Box)(() => ({
   display: "flex",
 }));
 import Footer from "../Footer/Footer";
-const LayoutContainer = styled(Box)(({ width }) => ({
+const LayoutContainer = styled(Box)(({ sideNavTheme }) => ({
   height: "100vh",
   display: "flex",
   flexGrow: "1",
   flexDirection: "column",
   verticalAlign: "top",
-  marginLeft: width,
+  marginLeft: sideNavTheme === "full" ? 260 : 80,
   position: "relative",
   overflow: "hidden",
   transition: "all 0.3s ease",
@@ -30,12 +30,22 @@ const ContentBox = styled(Box)(() => ({
   justifyContent: "space-between",
 }));
 function Layout(props) {
+  const [sideNavTheme, setsideNavTheme] = useState("full");
+  const handleChangeSideNavTheme = () => {
+    setsideNavTheme(
+      "full" === sideNavTheme ? "compact" : "full"
+      // ...sideNavTheme,
+      // width: sideNavTheme.width === 80 ? 260 : 80,
+      // sizeImage: sideNavTheme.sizeImage === "160px" ? "240px" : "160px",
+      // displayText: sideNavTheme.displayText === "none" ? "" : "none",
+    );
+  };
   return (
     <>
       <LayoutRoot>
-        <LayoutSidenav />
-        <LayoutContainer width={260}>
-          <LayoutTopbar />
+        <LayoutSidenav sideNavTheme={sideNavTheme} />
+        <LayoutContainer sideNavTheme={sideNavTheme}>
+          <LayoutTopbar handleChangeSideNavTheme={handleChangeSideNavTheme} />
           <ContentBox>
             <Box flexGrow={1} position="relative">
               <MatxSuspense>

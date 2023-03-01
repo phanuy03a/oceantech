@@ -1,6 +1,16 @@
 import React from "react";
 import Breadcrumb from "app/components/Breadcrumb";
 import MaterialTable from "@material-table/core";
+import { useState, useEffect } from "react";
+import {
+  deleteEmployee,
+  getEmployeeData,
+  getListEmployeeRequest,
+  getListLocation,
+  getOtherFeature,
+} from "app/redux/actions/actions";
+import { useSelector, useDispatch } from "react-redux";
+import ApprovedDialog from "./ApprovedDialog";
 import { Button, Box, Icon, IconButton, styled, Table, Tooltip } from "@mui/material";
 const Container = styled("div")(({ theme }) => ({
   margin: "30px",
@@ -12,14 +22,40 @@ const Container = styled("div")(({ theme }) => ({
 }));
 
 function Approved() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getListEmployeeRequest());
+    dispatch(getListLocation());
+    dispatch(getOtherFeature());
+  }, []);
+  const [shouldOpenDialog, setShouldOpenDialog] = useState(false);
+  const listApproved = useSelector((state) => state.Employee.listEmployee).filter((employee) => {
+    return (
+      employee.status === "Đã duyệt" ||
+      employee.status === "Kết thúc" ||
+      employee.status === "Đã nộp lưu" ||
+      (employee.releaseRequest !== undefined && employee.status === "Yêu cầu bổ sung") ||
+      (employee.releaseRequest !== undefined && employee.status === "Từ chối")
+    );
+  });
+  const handleClose = () => {
+    setShouldOpenDialog(false);
+    dispatch(getEmployeeData({}));
+  };
+
   const columns = [
     {
       title: "Hành động",
-      render: (rowData) => {
+      render: (rowdata) => {
         return (
           <>
             <Tooltip title="Xem chi tiết">
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  setShouldOpenDialog(true);
+                  dispatch(getEmployeeData(rowdata));
+                }}
+              >
                 <Icon color="success">visibilityIcon</Icon>
               </IconButton>
             </Tooltip>
@@ -27,45 +63,11 @@ function Approved() {
         );
       },
     },
-    { title: "Họ tên", field: "name" },
-    { title: "Tuổi", field: "age" },
+    { title: "Họ tên", field: "fullName" },
+    { title: "Vị trí", field: "position" },
     { title: "Email", field: "email" },
     { title: "Số điện thoại", field: "phone" },
   ];
-
-  const data = [
-    {
-      name: "Uy ko tín",
-      age: "11",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-    },
-    {
-      name: "Vũ nhôm",
-      age: "22",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-    },
-    {
-      name: "Trung tình",
-      age: "33",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-    },
-    {
-      name: "Huy",
-      age: "44",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-    },
-    {
-      name: "Cuốc Lươn",
-      age: "55",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-    },
-  ];
-
   return (
     <Container>
       <Box className="breadcrumb">
@@ -75,7 +77,7 @@ function Approved() {
       <Box width="100%" overflow="auto">
         <MaterialTable
           title={""}
-          data={data}
+          data={listApproved}
           columns={columns}
           options={{
             rowStyle: (rowData, index) => {
@@ -97,6 +99,7 @@ function Approved() {
           }}
         />
       </Box>
+      {shouldOpenDialog && <ApprovedDialog handleClose={handleClose} />}
     </Container>
   );
 }

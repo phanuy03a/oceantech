@@ -11,19 +11,25 @@ import {
   TextField,
   MenuItem,
 } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
+import { v4 as uuidv4 } from "uuid";
 import { Close } from "@mui/icons-material";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { addNewEmployee, getEmployeeData, updateEmployee } from "app/redux/actions/actions";
 function EmployeeDiplomaDialog(props) {
-  const { handleAddToFomik } = props;
+  const { diplomaData, handleAddDiploma, employee } = props;
+
+  const { open, handleClose } = props;
+  const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
-      name: "",
-      content: "",
-      date: "",
-      field: "",
-      place: "",
+      name: diplomaData?.name || "",
+      content: diplomaData?.content || "",
+      date: diplomaData?.date || "",
+      field: diplomaData?.field || null,
+      place: diplomaData?.place || "",
     },
     validationSchema: Yup.object({
       name: Yup.string()
@@ -39,14 +45,21 @@ function EmployeeDiplomaDialog(props) {
         .max(30, "Nhập nơi cấp đúng định dạng")
         .required("Không được bỏ trống"),
       date: Yup.date().required("Vui lòng nhập ngày"),
-      field: Yup.string().required("Hãy nhập lĩnh vực"),
+      field: Yup.object().required("Hãy nhập lĩnh vực").nullable(),
     }),
     onSubmit: (values) => {
-      console.log("submit");
-      handleAddToFomik(values, "diploma");
+      if (Object.keys(diplomaData).length === 0) {
+        values.id = uuidv4();
+        handleAddDiploma(values, "listDiploma");
+      } else {
+        values.id = diplomaData.id;
+        employee.listDiploma = employee.listDiploma.filter((diploma) => diploma.id !== values.id);
+        employee.listDiploma.push(values);
+      }
+      handleClose();
     },
   });
-  const { open, handleClose } = props;
+
   const otherFeature = useSelector((state) => state.OtherFeature.otherFeature);
   return (
     <Dialog open={open} maxWidth="md" fullWidth>
@@ -127,15 +140,37 @@ function EmployeeDiplomaDialog(props) {
                 variant="outlined"
                 name="field"
                 size="small"
-                value={formik.values.field}
-                onChange={formik.handleChange}
+                value={formik.values?.field?.fieldName}
+                onChange={(event) => {
+                  formik.setFieldValue("field", { fieldName: event.target.value });
+                }}
                 error={formik.errors.field && formik.touched.field}
                 helperText={formik.errors.field}
               >
                 {otherFeature.DegreeField.map((item) => (
-                  <MenuItem value={item.field}>{item.field}</MenuItem>
+                  <MenuItem value={item.fieldName}>{item.fieldName}</MenuItem>
                 ))}
               </TextField>
+              {/* <Autocomplete
+                size="small"
+                fullWidth
+                disablePortal
+                value={formik.values?.field || null}
+                onChange={(event, newValue) => {
+                  formik.setFieldValue("field", newValue);
+                }}
+                options={otherFeature.DegreeField}
+                getOptionLabel={(option) => option.fieldName}
+                renderInput={(params) => (
+                  <TextField
+                    fullWidth
+                    {...params}
+                    label="Lĩnh vực"
+                    error={formik.errors.field && formik.touched.field}
+                    helperText={formik.errors.field}
+                  />
+                )}
+              /> */}
             </Grid>
           </Grid>
         </DialogContent>

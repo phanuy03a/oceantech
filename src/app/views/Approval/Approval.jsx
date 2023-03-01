@@ -2,6 +2,18 @@ import React, { useState } from "react";
 import Breadcrumb from "app/components/Breadcrumb";
 import MaterialTable from "@material-table/core";
 import { Button, Box, Icon, IconButton, styled, Table, Tooltip } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import ReleaseDialog from "../ManageEmployee/ReleaseDialog";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  deleteEmployee,
+  getEmployeeData,
+  getListEmployeeRequest,
+  getListLocation,
+  getOtherFeature,
+} from "app/redux/actions/actions";
 import ApprovalDialog from "./ApprovalDialog";
 const Container = styled("div")(({ theme }) => ({
   margin: "30px",
@@ -13,15 +25,26 @@ const Container = styled("div")(({ theme }) => ({
 }));
 
 function Approval() {
+  const dispatch = useDispatch();
+  const employeeData = useSelector((state) => state.Employee.employeeData);
   const [shouldOpenDialog, setShouldOpenDialog] = useState(false);
+  const handleClose = () => {
+    setShouldOpenDialog(false);
+    dispatch(getEmployeeData({}));
+  };
   const columns = [
     {
       title: "Hành động",
-      render: (rowData) => {
+      render: (rowdata) => {
         return (
           <>
             <Tooltip title="Xem chi tiết">
-              <IconButton onClick={() => setShouldOpenDialog(true)}>
+              <IconButton
+                onClick={() => {
+                  setShouldOpenDialog(true);
+                  dispatch(getEmployeeData(rowdata));
+                }}
+              >
                 <Icon color="success">visibilityIcon</Icon>
               </IconButton>
             </Tooltip>
@@ -29,47 +52,36 @@ function Approval() {
         );
       },
     },
-    { title: "Họ tên", field: "name" },
-    { title: "Tuổi", field: "age" },
+    { title: "Họ tên", field: "fullName" },
+    { title: "Vị trí", field: "position" },
     { title: "Email", field: "email" },
     { title: "Số điện thoại", field: "phone" },
+    { title: "Trạng thái", field: "status" },
   ];
+  useEffect(() => {
+    dispatch(getListEmployeeRequest());
+    dispatch(getListLocation());
+    dispatch(getOtherFeature());
+  }, []);
 
-  const data = [
-    {
-      name: "Uy ko tín",
-      age: "11",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-    },
-    {
-      name: "Vũ nhôm",
-      age: "22",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-    },
-    {
-      name: "Trung tình",
-      age: "33",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-    },
-    {
-      name: "Huy",
-      age: "44",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-    },
-    {
-      name: "Cuốc Lươn",
-      age: "55",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-    },
-  ];
+  const listApproval = useSelector((state) => state.Employee.listEmployee).filter((employee) => {
+    return employee.status === "Chờ duyệt";
+  });
 
   return (
     <Container>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <Box className="breadcrumb">
         <Breadcrumb routeSegments={[{ name: "Lãnh đạo", path: "/" }, { name: "Chờ duyệt" }]} />
       </Box>
@@ -77,7 +89,7 @@ function Approval() {
       <Box width="100%" overflow="auto">
         <MaterialTable
           title={""}
-          data={data}
+          data={listApproval}
           columns={columns}
           options={{
             rowStyle: (rowData, index) => {
@@ -98,8 +110,7 @@ function Approval() {
           }}
         />
       </Box>
-      {shouldOpenDialog && <ApprovalDialog handleClose={() => setShouldOpenDialog(false)} />}
-      {/* <ApprovalDialog handleClose={() => setShouldOpenDialog(false)} /> */}
+      {shouldOpenDialog && <ApprovalDialog handleClose={handleClose} />}
     </Container>
   );
 }

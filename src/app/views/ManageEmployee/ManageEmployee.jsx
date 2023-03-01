@@ -1,8 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
+import {
+  deleteEmployee,
+  getEmployeeData,
+  getListEmployeeRequest,
+  getListLocation,
+  getOtherFeature,
+} from "app/redux/actions/actions";
+import { useSelector, useDispatch } from "react-redux";
 import Breadcrumb from "app/components/Breadcrumb";
 import MaterialTable from "@material-table/core";
 import { Button, Box, Icon, IconButton, styled, Table, Tooltip } from "@mui/material";
 import ManagerEmployeeDialog from "./ManagerEmployeeDialog";
+import ReleaseDialog from "./ReleaseDialog";
+import MoreInfoDialog from "app/components/MoreInfoDialog/MoreInfoDialog";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Container = styled("div")(({ theme }) => ({
   margin: "30px",
   [theme.breakpoints.down("sm")]: { margin: "16px" },
@@ -13,64 +26,78 @@ const Container = styled("div")(({ theme }) => ({
 }));
 
 function ManagerEmployee() {
+  const [shouldOpenDialog, setShouldOpenDialog] = useState(false);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getListEmployeeRequest());
+    dispatch(getListLocation());
+    dispatch(getOtherFeature());
+  }, []);
   const [openManagerEmployeeDialog, setOpenManagerEmployeeDialog] = useState(false);
+  const employeeData = useSelector((state) => state.Employee.employeeData);
 
+  const listEmployee = useSelector((state) => state.Employee.listEmployee).filter((employee) => {
+    return (
+      employee.status === "Đã duyệt" ||
+      (employee.releaseRequest !== undefined && employee.status === "Yêu cầu bổ sung") ||
+      (employee.releaseRequest !== undefined && employee.status === "Từ chối")
+    );
+  });
+  const handleClose = () => {
+    setShouldOpenDialog(false);
+  };
   const columns = [
     {
       title: "Hành động",
       render: (rowData) => {
         return (
           <>
+            <Tooltip title="Thông tin">
+              <IconButton
+                disabled={rowData.status === "Đã duyệt" ? true : false}
+                onClick={() => {
+                  dispatch(getEmployeeData(rowData));
+                  setShouldOpenDialog(true);
+                }}
+              >
+                <Icon color={rowData.status === "Đã duyệt" ? "disabled" : "primary"}>report</Icon>
+              </IconButton>
+            </Tooltip>
             <Tooltip title="Cập nhật diễn biến">
-              <IconButton onClick={() => setOpenManagerEmployeeDialog(true)}>
-                <Icon color="success">trending_up_icon</Icon>
+              <IconButton
+                onClick={() => {
+                  setOpenManagerEmployeeDialog(true);
+                  dispatch(getEmployeeData(rowData));
+                }}
+              >
+                <Icon color="success">visibilityIcon</Icon>
               </IconButton>
             </Tooltip>
           </>
         );
       },
     },
-    { title: "Họ tên", field: "name" },
-    { title: "Tuổi", field: "age" },
+    { title: "Họ tên", field: "fullName" },
+    { title: "Vị trí", field: "position" },
     { title: "Email", field: "email" },
     { title: "Số điện thoại", field: "phone" },
-  ];
-
-  const data = [
-    {
-      name: "Uy ko tín",
-      age: "11",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-    },
-    {
-      name: "Vũ nhôm",
-      age: "22",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-    },
-    {
-      name: "Trung tình",
-      age: "33",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-    },
-    {
-      name: "Huy",
-      age: "44",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-    },
-    {
-      name: "Cuốc Lươn",
-      age: "55",
-      email: "abcdef@gmail.com",
-      phone: "012456789",
-    },
+    { title: "Trạng thái", field: "status" },
   ];
 
   return (
     <Container>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <Box className="breadcrumb">
         <Breadcrumb
           routeSegments={[{ name: "Quản lý", path: "/" }, { name: "Quản lý nhân viên" }]}
@@ -80,7 +107,7 @@ function ManagerEmployee() {
       <Box width="100%" overflow="auto">
         <MaterialTable
           title={""}
-          data={data}
+          data={listEmployee}
           columns={columns}
           options={{
             rowStyle: (rowData, index) => {
@@ -103,7 +130,20 @@ function ManagerEmployee() {
         />
       </Box>
       {openManagerEmployeeDialog && (
-        <ManagerEmployeeDialog handleClose={() => setOpenManagerEmployeeDialog(false)} />
+        <ManagerEmployeeDialog
+          handleClose={() => {
+            setOpenManagerEmployeeDialog(false);
+            dispatch(getEmployeeData({}));
+          }}
+        />
+      )}
+      {shouldOpenDialog && (
+        <MoreInfoDialog
+          handleClose={handleClose}
+          openEditDialog={() => {
+            setOpenManagerEmployeeDialog(true);
+          }}
+        />
       )}
     </Container>
   );

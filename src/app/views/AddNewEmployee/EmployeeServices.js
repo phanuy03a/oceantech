@@ -13,3 +13,12 @@ export const GetListLocation = () => {
 export const getOtherFeature = () => {
   return axios.get(API_PATH_OTHER_FEATURE);
 };
+export const addNewEmployee = (data) => {
+  return axios.post(API_PATH + "listAddNewEmployee", data);
+};
+export const deleteEmployee = (id) => {
+  return axios.delete(API_PATH + "listAddNewEmployee/" + id);
+};
+export const updateEmployee = (payload) => {
+  return axios.put(API_PATH + "listAddNewEmployee/" + payload.id, payload.data);
+};

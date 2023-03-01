@@ -1,5 +1,5 @@
 import Avatar from "react-avatar-edit";
-
+import { Button, Icon } from "@mui/material";
 import React, { Component } from "react";
 import { Dialog } from "@mui/material";
 class CustomAvatar extends Component {
@@ -20,6 +20,7 @@ class CustomAvatar extends Component {
 
   onCloseDefault = () => {
     this.setState({ showModal: false, src: this.state.defaultPreview });
+    this.props.formikRoot.setFieldValue("image", this.state.defaultPreview);
   };
 
   onClose = () => {
@@ -36,9 +37,9 @@ class CustomAvatar extends Component {
       <>
         <Dialog onClose={this.onCloseDefault} open={this.state.showModal}>
           <Avatar
-            width={390}
-            height={295}
-            exportSize={390}
+            width={300}
+            height={300}
+            exportSize={300}
             onCrop={this.onCropDefault}
             onClose={this.onCloseDefault}
           />
@@ -46,8 +47,8 @@ class CustomAvatar extends Component {
             <>
               <h5>Preview</h5>
               <img
-                alt="Avatar Preview"
-                style={{ width: "150px", height: "150px" }}
+                alt="Chọn ảnh nhân viên"
+                style={{ width: "150px", height: "150px", border: "1px soild ,#eee" }}
                 src={this.state.defaultPreview}
               />
             </>
@@ -55,11 +56,26 @@ class CustomAvatar extends Component {
         </Dialog>
         <div>
           <img
-            alt="User Avatar"
-            style={{ width: "100%", borderRadius: "100%", cursor: "pointer" }}
+            alt="Chọn ảnh nhân viên"
+            style={{
+              width: "90%",
+              aspectRatio: "1/1",
+              cursor: "pointer",
+              display: "block",
+              margin: "10px auto",
+              borderRadius: "50%",
+            }}
             src={this.state.src}
-            onClick={this.onAvatarClick}
           />
+          <Button
+            onClick={this.onAvatarClick}
+            className="button-add-image"
+            variant="contained"
+            style={{ display: this.props.displayButton }}
+            endIcon={<Icon>camera_alt</Icon>}
+          >
+            Chọn ảnh nhân viên
+          </Button>
         </div>
       </>
     );

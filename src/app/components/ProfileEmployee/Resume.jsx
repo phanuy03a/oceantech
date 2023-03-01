@@ -1,190 +1,303 @@
-import React from "react";
-import { Icon } from "@mui/material";
+import React, { useState } from "react";
+import { Icon, TextField, IconButton } from "@mui/material";
+import { Grid, Typography, Box, Input, InputAdornment } from "@mui/material";
+import styled from "@emotion/styled";
+
 import CustomAvatar from "../Avatar/Avatar";
-function Resume(props) {
+const Resume = React.forwardRef((props, ref) => {
+  const MyButton = styled(IconButton)({
+    display: props.display,
+  });
+  const { employee, status } = props;
+  const [textFieldValues, setTextFieldValues] = useState({
+    education: employee.education,
+    experience: employee.experience,
+    skill: employee.skill,
+    hobby: employee.hobby,
+    generalIntroduction: employee.generalIntroduction,
+    careerGoals: employee.careerGoals,
+  });
+  const handleAddTextField = (method) => {
+    const newValues = { ...textFieldValues };
+    newValues[method].push("");
+    setTextFieldValues(newValues);
+  };
+
+  const handleRemoveTextField = (index, method) => () => {
+    const newValues = { ...textFieldValues };
+    newValues[method].splice(index, 1);
+    setTextFieldValues(newValues);
+  };
+
+  const handleTextFieldChange = (event, index, method) => {
+    const newValues = { ...textFieldValues };
+    newValues[method][index] = event.target.value;
+    console.log(newValues);
+    setTextFieldValues(newValues);
+  };
+
   return (
-    <div>
-      <div>
-        <div class="resume">
-          <div class="resume_left">
-            <div class="resume_profile">
-              <CustomAvatar image={"assets/images/face-1.png"} />
-            </div>
-            <div class="resume_content">
-              <div class="resume_item resume_info">
-                <div class="title">
-                  <p class="bold"> Bùi Trịnh Quang Huy</p>
-                  <p class="regular">Front-end Developer</p>
+    <div ref={ref}>
+      <Grid container className="resume-container" xs={12} spacing={2}>
+        <Grid container direction={"column"} xs={4} rowSpacing={2} className="resume-left">
+          <Grid item>
+            <CustomAvatar image={employee.image} displayButton={"none"} />
+          </Grid>
+          <Grid item>
+            <Typography variant="h5" textAlign={"center"} textTransform={"uppercase"}>
+              {employee.fullName}
+            </Typography>
+            <Typography variant="subtitle1" textAlign={"center"}>
+              {employee.team}
+            </Typography>
+          </Grid>
+
+          <Grid item container direction={"column"} rowSpacing={2}>
+            <Grid item>
+              <Box className="title-info">
+                <Typography textTransform={"uppercase"} variant="subtitle1">
+                  Thông tin cơ bản
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item>
+              <Box className="item-box">
+                <Icon>cakeIcon</Icon>
+                <Typography variant="body2">
+                  {employee.birthday.split("-").reverse().join("-")}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item>
+              <Box className="item-box">
+                <Icon>transgender</Icon>
+                <Typography variant="body2">{employee.gender}</Typography>
+              </Box>
+            </Grid>
+            <Grid item>
+              <Box className="item-box">
+                <Icon>location_on</Icon>
+                <Typography variant="body2">{employee.address}</Typography>
+              </Box>
+            </Grid>
+            <Grid item>
+              <Box className="item-box">
+                <Icon>phone</Icon>
+                <Typography variant="body2">{employee.phone}</Typography>
+              </Box>
+            </Grid>
+            <Grid item>
+              <Box className="item-box">
+                <Icon>email</Icon>
+                <Typography variant="body2">{employee.email}</Typography>
+              </Box>
+            </Grid>
+          </Grid>
+          <Grid item container direction={"column"} rowSpacing={2}>
+            <Grid item>
+              <Box className="title-skill">
+                <Typography textTransform={"uppercase"} variant="subtitle1">
+                  Kĩ Năng
+                </Typography>
+                <MyButton onClick={() => handleAddTextField("skill")}>
+                  <Icon sx={{ fontSize: "28px", color: "#fff" }} className={"add-button"}>
+                    control_point
+                  </Icon>
+                </MyButton>
+              </Box>
+            </Grid>
+            <Grid item className="textfield-box" m={"0 24px"}>
+              {textFieldValues.skill.map((value, index) => (
+                <div style={{ display: "flex", alignItems: "center" }} key={index}>
+                  <TextField
+                    value={value}
+                    fullWidth
+                    focused
+                    multiline
+                    InputProps={{ inputProps: { style: { color: "#fff" } }, readOnly: status }}
+                    variant="standard"
+                    name="skill"
+                    onChange={(event) => {
+                      handleTextFieldChange(event, index, "skill");
+                    }}
+                  />
+
+                  <MyButton onClick={handleRemoveTextField(index, "skill")} s>
+                    <Icon sx={{ color: "#ddd" }} className={"remove-button"}>
+                      remove_circle_outline
+                    </Icon>
+                  </MyButton>
                 </div>
-                <ul>
-                  <li>
-                    <div class="icon">
-                      <Icon>map</Icon>
-                    </div>
-                    <div class="data">Hà Nội</div>
-                  </li>
-                  <li>
-                    <div class="icon">
-                      <Icon>phone</Icon>
-                    </div>
-                    <div class="data"> 0324445678</div>
-                  </li>
-                  <li>
-                    <div class="icon">
-                      <Icon>mail</Icon>
-                    </div>
-                    <div class="data">stephen@gmail.com</div>
-                  </li>
-                  <li>
-                    <div class="icon">
-                      <Icon>web</Icon>
-                    </div>
-                    <div class="data">www.stephen.com</div>
-                  </li>
-                </ul>
-              </div>
-              <div class="resume_item resume_skills">
-                <div class="title">
-                  <p class="bold">Kĩ Năng</p>
+              ))}
+            </Grid>
+          </Grid>
+          <Grid item container direction={"column"} rowSpacing={2}>
+            <Grid item>
+              <Box className="title-hobby">
+                <Typography textTransform={"uppercase"} variant="subtitle1">
+                  Sở Thích
+                </Typography>
+                <MyButton onClick={() => handleAddTextField("hobby")}>
+                  <Icon sx={{ fontSize: "28px", color: "#fff" }} className={"add-button"}>
+                    control_point
+                  </Icon>
+                </MyButton>
+              </Box>
+            </Grid>
+            <Grid item className="textfield-box" m={"0 24px"}>
+              {textFieldValues.hobby.map((value, index) => (
+                <div style={{ display: "flex", alignItems: "center" }} key={index}>
+                  <TextField
+                    value={value}
+                    fullWidth
+                    multiline
+                    focused
+                    InputProps={{ inputProps: { style: { color: "#fff" } }, readOnly: status }}
+                    variant="standard"
+                    name="hobby"
+                    onChange={(event) => {
+                      handleTextFieldChange(event, index, "hobby");
+                    }}
+                  />
+
+                  <MyButton onClick={handleRemoveTextField(index, "hobby")}>
+                    <Icon sx={{ color: "#ddd" }} className={"remove-button"}>
+                      remove_circle_outline
+                    </Icon>
+                  </MyButton>
                 </div>
-                <ul>
-                  <li>
-                    <div class="skill_name">HTML/CSS/JS</div>
-                  </li>
-                </ul>
+              ))}
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item container xs={8} className="resume-right" direction={"column"} spacing={4}>
+          <Grid item display={"flex"} gap={1} alignItems="center">
+            <Icon sx={{ fontSize: "28px" }}>account_circle</Icon>
+            <Typography textTransform={"uppercase"} variant="body1" fontWeight={600}>
+              Giới thiệu chung
+            </Typography>
+          </Grid>
+          <Grid item>
+            {textFieldValues.generalIntroduction.map((value, index) => (
+              <div style={{ display: "flex", alignItems: "center" }} key={index}>
+                <TextField
+                  value={value}
+                  fullWidth
+                  multiline
+                  InputProps={{ readOnly: status }}
+                  variant="standard"
+                  name="generalIntroduction"
+                  onChange={(event) => {
+                    handleTextFieldChange(event, index, "generalIntroduction");
+                  }}
+                />
               </div>
-              <div class="resume_item resume_social">
-                <div class="title">
-                  <p class="bold">Mạng xã hội</p>
-                </div>
-                <ul>
-                  <li>
-                    <div class="icon">
-                      <i class="fab fa-facebook-square"></i>
-                    </div>
-                    <div class="data">
-                      <p class="semi-bold">Facebook</p>
-                      <p>Stephen@facebook</p>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="icon">
-                      <i class="fab fa-twitter-square"></i>
-                    </div>
-                    <div class="data">
-                      <p class="semi-bold">Twitter</p>
-                      <p>Stephen@twitter</p>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="icon">
-                      <i class="fab fa-youtube"></i>
-                    </div>
-                    <div class="data">
-                      <p class="semi-bold">Youtube</p>
-                      <p>Stephen@youtube</p>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="icon">
-                      <i class="fab fa-linkedin"></i>
-                    </div>
-                    <div class="data">
-                      <p class="semi-bold">Linkedin</p>
-                      <p>Stephen@linkedin</p>
-                    </div>
-                  </li>
-                </ul>
+            ))}
+          </Grid>
+          <Grid item display={"flex"} justifyContent="space-between">
+            <Box display={"flex"} gap={1} alignItems="center">
+              <Icon sx={{ fontSize: "28px" }}>school</Icon>
+              <Typography textTransform={"uppercase"} variant="body1" fontWeight={600}>
+                Học vấn
+              </Typography>
+            </Box>
+            <MyButton onClick={() => handleAddTextField("education")}>
+              <Icon sx={{ fontSize: "28px" }} className={"add-button"}>
+                control_point
+              </Icon>
+            </MyButton>
+          </Grid>
+          <Grid item>
+            {textFieldValues.education.map((value, index) => (
+              <div style={{ display: "flex", alignItems: "center" }} key={index}>
+                <TextField
+                  value={value}
+                  fullWidth
+                  InputProps={{ readOnly: status }}
+                  multiline
+                  variant="standard"
+                  name="education"
+                  // onChange={(event) => {
+                  //   handleTextFieldChange(index, "education");
+                  //   textFieldValues.education[index] = event.target.value;
+                  //   // formikRoot.setFieldValue("education", textFieldValues.education);
+                  // }}
+                  onChange={(event) => {
+                    handleTextFieldChange(event, index, "education");
+                  }}
+                />
+
+                <MyButton onClick={handleRemoveTextField(index, "education")}>
+                  <Icon className={"remove-button"}>remove_circle_outline</Icon>
+                </MyButton>
               </div>
-            </div>
-          </div>
-          <div class="resume_right">
-            <div class="resume_item resume_about">
-              <div class="title">
-                <p class="bold">Giới thiệu chung</p>
+            ))}
+          </Grid>
+
+          <Grid item display={"flex"} justifyContent="space-between">
+            <Box display={"flex"} gap={1} alignItems="center">
+              <Icon sx={{ fontSize: "28px" }}>business_center</Icon>
+              <Typography textTransform={"uppercase"} variant="body1" fontWeight={600}>
+                Kinh nghiệm làm việc
+              </Typography>
+            </Box>
+            <MyButton
+              onClick={() => {
+                handleAddTextField("experience");
+              }}
+            >
+              <Icon sx={{ fontSize: "28px" }} className={"add-button"}>
+                control_point
+              </Icon>
+            </MyButton>
+          </Grid>
+          <Grid item>
+            {textFieldValues.experience.map((value, index) => (
+              <div style={{ display: "flex", alignItems: "center" }} key={index}>
+                <TextField
+                  value={value}
+                  fullWidth
+                  multiline
+                  name="experience"
+                  variant="standard"
+                  InputProps={{ readOnly: status }}
+                  onChange={(event) => {
+                    handleTextFieldChange(event, index, "experience");
+                  }}
+                />
+
+                <MyButton onClick={handleRemoveTextField(index, "experience")}>
+                  <Icon className={"remove-button"}>remove_circle_outline</Icon>
+                </MyButton>
               </div>
-              <p>
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perspiciatis illo fugit
-                officiis distinctio culpa officia totam atque exercitationem inventore repudiandae?
-              </p>
-            </div>
-            <div class="resume_item resume_work">
-              <div class="title">
-                <p class="bold">Kinh nghiệm làm việc</p>
+            ))}
+          </Grid>
+          <Grid item display={"flex"} gap={1} alignItems="center">
+            <Icon sx={{ fontSize: "28px" }}>create</Icon>
+            <Typography textTransform={"uppercase"} variant="body1" fontWeight={600}>
+              Mục tiêu nghề nghiệp
+            </Typography>
+          </Grid>
+          <Grid item>
+            {textFieldValues.careerGoals.map((value, index) => (
+              <div style={{ display: "flex", alignItems: "center" }} key={index}>
+                <TextField
+                  value={value}
+                  fullWidth
+                  multiline
+                  InputProps={{ readOnly: status }}
+                  variant="standard"
+                  name="careerGoals"
+                  onChange={(event) => {
+                    handleTextFieldChange(event, index, "careerGoals");
+                  }}
+                />
               </div>
-              <ul>
-                <li>
-                  <div class="date">2013 - 2015</div>
-                  <div class="info">
-                    <p class="semi-bold">Lorem ipsum dolor sit amet.</p>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum,
-                      voluptatibus!
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <div class="date">2015 - 2017</div>
-                  <div class="info">
-                    <p class="semi-bold">Lorem ipsum dolor sit amet.</p>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum,
-                      voluptatibus!
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <div class="date">2017 - Present</div>
-                  <div class="info">
-                    <p class="semi-bold">Lorem ipsum dolor sit amet.</p>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum,
-                      voluptatibus!
-                    </p>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="resume_item resume_education">
-              <div class="title">
-                <p class="bold">Học vấn</p>
-              </div>
-              <ul>
-                <li>
-                  <div class="date">2010 - 2013</div>
-                  <div class="info">
-                    <p class="semi-bold">Web Designing (Texas University)</p>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum,
-                      voluptatibus!
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <div class="date">2000 - 2010</div>
-                  <div class="info">
-                    <p class="semi-bold">Texas International School</p>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum,
-                      voluptatibus!
-                    </p>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div className="resume_item">
-              <div class="title">
-                <p class="bold">Sở Thích</p>
-                <ul>
-                  <li>Chơi Brawlhalla</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            ))}
+          </Grid>
+        </Grid>
+      </Grid>
     </div>
   );
-}
-
+});
 export default Resume;

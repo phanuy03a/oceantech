@@ -20,17 +20,18 @@ const ExtAndIntCommon = {
   },
   "& .icon": {
     fontSize: "18px",
-    paddingLeft: "20px",
+    // color: "red",
     verticalAlign: "middle",
   },
 };
-const ListLabel = styled(Paragraph)(() => ({
+const ListLabel = styled(Paragraph)(({ sideNavTheme }) => ({
   fontSize: "12px",
   marginTop: "20px",
-  marginLeft: "25px",
+  marginLeft: "24px",
   marginBottom: "10px",
   textTransform: "uppercase",
   color: "#FFFFFFB3",
+  display: sideNavTheme === "full" ? "" : "none",
 }));
 const InternalLink = styled(Box)(() => ({
   "& a": {
@@ -41,20 +42,26 @@ const InternalLink = styled(Box)(() => ({
     backgroundColor: "rgba(255, 255, 255, 0.16)",
   },
 }));
-const StyledText = styled(Span)(() => ({
+const StyledText = styled(Span)(({ sideNavTheme }) => ({
   fontSize: "0.875rem",
   paddingLeft: "0.8rem",
   lineHeight: "1.5",
+  display: sideNavTheme === "full" ? "" : "none",
 }));
 
-function Sidenav({ items }) {
+function Sidenav({ items, sideNavTheme }) {
   const renderLevels = (data) => {
     return data.map((item, index) => {
-      if (item.type === "label") return <ListLabel key={index}>{item.label}</ListLabel>;
+      if (item.type === "label")
+        return (
+          <ListLabel sideNavTheme={sideNavTheme} key={index}>
+            {item.label}
+          </ListLabel>
+        );
 
       if (item.children) {
         return (
-          <NavExpansionPanel item={item} key={index}>
+          <NavExpansionPanel sideNavTheme={sideNavTheme} item={item} key={index}>
             {renderLevels(item.children)}
           </NavExpansionPanel>
         );
@@ -62,12 +69,15 @@ function Sidenav({ items }) {
         return (
           <InternalLink key={index}>
             <NavLink to={item.path} className={"compactNavItem"}>
-              <ButtonBase key={item.name} name="child" sx={{ width: "100%", paddingLeft: 1 }}>
-                <Icon className="icon" sx={{ width: 36 }}>
+              <ButtonBase key={item.name} name="child" sx={{ width: "100%", paddingLeft: 2 }}>
+                <Icon
+                  className="icon"
+                  sx={{ width: 36, margin: sideNavTheme === "full" ? "0 0 0 20px" : "0 auto" }}
+                >
                   {item.icon}
                 </Icon>
 
-                <StyledText>{item.name}</StyledText>
+                <StyledText sideNavTheme={sideNavTheme}>{item.name}</StyledText>
 
                 <Box mx="auto" />
               </ButtonBase>

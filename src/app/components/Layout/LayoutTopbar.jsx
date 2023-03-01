@@ -48,11 +48,12 @@ const StyledItem = styled(MenuItem)(() => ({
 }));
 
 function LayoutTopbar(props) {
+  const { handleChangeSideNavTheme } = props;
   return (
     <TopbarRoot>
       <TopbarContainer>
         <Box display="flex">
-          <StyledIconButton>
+          <StyledIconButton onClick={handleChangeSideNavTheme}>
             <Icon>menu</Icon>
           </StyledIconButton>
         </Box>

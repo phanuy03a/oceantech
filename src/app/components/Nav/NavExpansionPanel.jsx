@@ -1,5 +1,5 @@
 import React from "react";
-import { ButtonBase, Icon } from "@mui/material";
+import { ButtonBase, Icon, Button } from "@mui/material";
 import { Box, styled } from "@mui/system";
 import clsx from "clsx";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -28,33 +28,36 @@ const NavExpandRoot = styled("div")(({ theme }) => ({
     "& .itemIcon": { display: "none" },
   },
 }));
-const BaseButton = styled(ButtonBase)(({}) => ({
+const BaseButton = styled(ButtonBase)(({ sideNavTheme }) => ({
   height: 44,
   width: "100%",
+  padding: "0 16px",
   whiteSpace: "pre",
   overflow: "hidden",
-  paddingRight: "16px",
+  // paddingRight: "16px",
   borderRadius: "4px",
   marginBottom: "8px",
   display: "flex",
-  justifyContent: "space-between !important",
-
+  justifyContent: sideNavTheme === "full" ? "space-between !important" : "",
   "&:hover": { background: "rgba(255, 255, 255, 0.08)" },
   "& .icon": {
     width: 36,
+
     fontSize: "18px",
-    paddingLeft: "16px",
+    // paddingLeft: "16px",
     verticalAlign: "middle",
   },
 }));
 
-const ItemText = styled("span")(() => ({
+const ItemText = styled("span")(({ sideNavTheme }) => ({
   fontSize: "0.875rem",
   paddingLeft: "0.8rem",
   verticalAlign: "middle",
   lineHeight: 1.5,
+
+  display: sideNavTheme === "full" ? "" : "none",
 }));
-function NavExpansionPanel({ item, children }) {
+function NavExpansionPanel({ item, children, sideNavTheme }) {
   const [collapsed, setCollapsed] = useState(true);
   const elementRef = useRef(null);
   const componentHeight = useRef(0);
@@ -93,6 +96,7 @@ function NavExpansionPanel({ item, children }) {
   return (
     <NavExpandRoot>
       <BaseButton
+        sideNavTheme={sideNavTheme}
         className={clsx({
           "has-submenu compactNavItem": true,
 
@@ -100,10 +104,14 @@ function NavExpansionPanel({ item, children }) {
         })}
         onClick={handleClick}
       >
-        <Box display="flex" alignItems="center">
-          {icon && <Icon className="icon">{icon}</Icon>}
+        <Box>
+          {icon && (
+            <Icon color={sideNavTheme === "full" ? "" : "primary"} className="icon">
+              {icon}
+            </Icon>
+          )}
 
-          <ItemText className="sidenavHoverShow">{name}</ItemText>
+          <ItemText sideNavTheme={sideNavTheme}>{name}</ItemText>
         </Box>
 
         <div
@@ -113,7 +121,10 @@ function NavExpansionPanel({ item, children }) {
             expandIcon: !collapsed,
           })}
         >
-          <Icon fontSize="small" sx={{ verticalAlign: "middle" }}>
+          <Icon
+            fontSize="small"
+            sx={{ verticalAlign: "middle", display: sideNavTheme === "full" ? "" : "none" }}
+          >
             chevron_right
           </Icon>
         </div>

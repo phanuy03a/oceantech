@@ -4,34 +4,37 @@ import {
   DialogTitle,
   Box,
   Button,
+  Card,
   styled,
   DialogActions,
   DialogContent,
   Grid,
   TextField,
   MenuItem,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   IconButton,
   Icon,
-  Paper,
-  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  Typography,
 } from "@mui/material";
 
+import CustomAvatar from "app/components/Avatar/Avatar";
 import ReleaseDialog from "./ReleaseDialog";
-import EmployeeCard from "app/components/EmployeeCard/EmployeeCard";
-import EmployeeCardDetail from "app/components/EmployeeCard/EmloyeeCardDetail";
-const ListUpdate = [
-  { id: 1, name: "Lương" },
-  { id: 2, name: "Chức Vụ" },
-  { id: 3, name: "Nhóm" },
-];
+import UpdateOptions from "./UpdateOptions";
+import { useSelector, useDispatch } from "react-redux";
 
 function ManagerEmployeeDialog({ handleClose }) {
+  const employeeData = useSelector((state) => state.Employee.employeeData);
   const [shouldOpenDialog, setShouldOpenDialog] = useState(false);
 
   return (
     <>
       {" "}
-      <Dialog open={true} onClose={handleClose} maxWidth="md" fullWidth>
+      <Dialog open={true} onClose={handleClose} maxWidth="lg" fullWidth>
         <DialogTitle
           sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
         >
@@ -45,20 +48,102 @@ function ManagerEmployeeDialog({ handleClose }) {
           <Grid container xs={12} spacing={4}>
             <Grid item container xs={4} spacing={2}>
               <Grid item xs={12}>
-                <EmployeeCard />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField select fullWidth label="Cập nhật">
-                  {ListUpdate.map((item) => (
-                    <MenuItem key={item.id} value={item.name}>
-                      {item.name}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                <CustomAvatar image={employeeData.image} displayButton="none" />
+                <Typography variant="h5" textAlign={"center"} textTransform={"uppercase"}>
+                  {employeeData.fullName}
+                </Typography>
+                <Typography variant="subtitle1" textAlign={"center"}>
+                  {employeeData.team}
+                </Typography>
               </Grid>
             </Grid>
             <Grid item container xs={8} spacing={2}>
-              <EmployeeCardDetail />
+              <Card>
+                <CardHeader title="Thông tin cơ bản " />
+                <Divider />
+                <CardContent>
+                  <Grid container spacing={3}>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        label="Họ và tên"
+                        variant="outlined"
+                        value={employeeData.fullName}
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        label="Mã nhân viên"
+                        variant="outlined"
+                        value={employeeData.code}
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        label="Email"
+                        variant="outlined"
+                        value={employeeData.email}
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        label="Số điện thoại"
+                        variant="outlined"
+                        value={employeeData.phone}
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        type={"date"}
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        label="Ngày sinh"
+                        variant="outlined"
+                        value={employeeData.birthday}
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        label="Vị trí"
+                        value={employeeData.position}
+                        variant="outlined"
+                      ></TextField>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+                <Divider />
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    p: 2,
+                  }}
+                ></Box>
+              </Card>
+            </Grid>
+            <Grid item container xs={12}>
+              <UpdateOptions />
             </Grid>
           </Grid>
         </DialogContent>
@@ -73,12 +158,14 @@ function ManagerEmployeeDialog({ handleClose }) {
           >
             Kết thúc
           </Button>
-          <Button variant="contained" sx={{ mb: 2, background: "#7467EF" }}>
-            Xác nhận
-          </Button>
         </DialogActions>
       </Dialog>
-      {shouldOpenDialog && <ReleaseDialog handleClose={() => setShouldOpenDialog(false)} />}
+      {shouldOpenDialog && (
+        <ReleaseDialog
+          handleClose={() => setShouldOpenDialog(false)}
+          handleCloseAll={handleClose}
+        />
+      )}
     </>
   );
 }
